@@ -1,0 +1,258 @@
+.explorePageContainer {
+  padding-top: 70px; /* Match header height */
+  min-height: 100vh;
+  background-color: var(--color-background-dark);
+  color: var(--color-text-primary);
+}
+
+.mainContent {
+  max-width: 1280px; /* Wider content area */
+  margin: 0 auto;
+  padding: 2.5rem; /* Consistent padding */
+}
+
+.pageTitle {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 2.5rem; /* Consistent title size */
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: var(--color-text-primary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Adjusted minmax for slightly larger cards */
+  gap: 1.5rem; /* Consistent gap */
+  justify-items: center; /* Center items in the grid */
+}
+
+/* Styling for error and no results messages */
+.mainContent p {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  margin-top: 2rem;
+}
+
+/* Placeholder for person cards, adjust if ContentCard is adapted */
+.personCardPlaceholder {
+  background-color: var(--color-background-medium);
+  border-radius: 6px;
+  padding: 1rem;
+  text-align: center;
+  color: var(--color-text-primary);
+  font-size: 0.95rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); /* Darker shadow */
+  border: 1px solid var(--color-border-dark);
+}
+
+@media (max-width: 1024px) {
+  .mainContent {
+    padding: 2rem;
+  }
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.25rem;
+  }
+  .pageTitle {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .explorePageContainer {
+    padding-top: 60px;
+  }
+  .mainContent {
+    padding: 1.5rem;
+  }
+  .pageTitle {
+    font-size: 2rem;
+    margin-bottom: 1.25rem;
+  }
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+  .mainContent p {
+    font-size: 1rem;
+  }
+  .filterSortContainer {
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .filterDropdown {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.9rem;
+    padding-right: 2.2rem;
+    background-size: 1.1em;
+  }
+  .paginationControls {
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .paginationButton {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+  }
+  .pageInfo {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .explorePageContainer {
+    padding-top: 50px;
+  }
+  .mainContent {
+    padding: 1rem;
+  }
+  .pageTitle {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+  }
+  .mainContent p {
+    font-size: 0.9rem;
+  }
+  .personCardPlaceholder {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+  .filterSortContainer {
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .filterGroup {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .filterDropdown {
+    width: 70%;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+    padding-right: 2rem;
+    background-size: 1em;
+  }
+  .paginationControls {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .paginationButton {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  .pageInfo {
+    font-size: 0.9rem;
+  }
+}
+
+/* Add styles for filters and pagination later */
+.filtersContainer {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.paginationContainer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.filterSortContainer {
+  display: flex;
+  justify-content: center; /* Center the filter/sort controls */
+  gap: 2rem;
+  margin-bottom: 2.5rem; /* Space below filters */
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filterLabel {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.filterDropdown {
+  background-color: var(--color-background-medium);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  padding: 0.6rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  -webkit-appearance: none; /* Remove default dropdown arrow */
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1.2em;
+  padding-right: 2.5rem; /* Make space for the custom arrow */
+}
+
+.filterDropdown:hover {
+  border-color: var(--color-text-primary);
+  background-color: var(--color-background-light);
+}
+
+.filterDropdown:focus {
+  outline: none;
+  border-color: var(--color-accent-red);
+  box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.3);
+}
+
+/* Pagination Controls */
+.paginationControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding-bottom: 2rem; /* Add padding at the bottom */
+}
+
+.paginationButton {
+  background-color: var(--color-accent-red);
+  color: var(--color-text-primary);
+  padding: 0.7rem 1.4rem;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: var(--color-accent-red-hover);
+}
+
+.paginationButton:disabled {
+  background-color: var(--color-border-dark);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.pageInfo {
+  font-size: 1.1rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}

@@ -1,0 +1,76 @@
+.errorOverlay {
+  position: fixed;
+  bottom: 2rem; /* Consistent bottom spacing */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000; /* Ensure it's above everything */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto; /* Fit content */
+  max-width: 90%;
+}
+
+.errorContent {
+  background-color: var(--color-accent-red); /* Use accent red */
+  color: var(--color-text-primary); /* Use primary text color */
+  padding: 1rem 1.5rem; /* Consistent padding */
+  border-radius: 4px; /* Consistent border-radius */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* Slightly darker shadow */
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Consistent gap */
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.errorContent p {
+  margin: 0;
+  flex-grow: 1;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--color-text-primary); /* Use primary text color */
+  font-size: 1.2rem; /* Adjusted size */
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem; /* Adjusted padding */
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.closeButton:hover {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .errorOverlay {
+    bottom: 1.5rem;
+  }
+  .errorContent {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    gap: 0.75rem;
+  }
+  .closeButton {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .errorOverlay {
+    bottom: 1rem;
+    max-width: 95%;
+  }
+  .errorContent {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    gap: 0.5rem;
+  }
+  .closeButton {
+    font-size: 0.9rem;
+  }
+}

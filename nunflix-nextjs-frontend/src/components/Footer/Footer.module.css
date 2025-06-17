@@ -1,0 +1,94 @@
+.footer {
+    background-color: var(--color-background-dark); /* Ensure explicit dark background */
+    color: var(--color-text-secondary); /* Ensure secondary text color */
+    padding: 2rem 2.5rem; /* Consistent padding */
+    margin-top: 3rem; /* Space above the footer */
+    text-align: center;
+    border-top: 1px solid var(--color-border-dark); /* Ensure subtle top border */
+}
+
+.footerContent {
+    max-width: 900px; /* Increased max-width for better flow */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem; /* Consistent gap between sections */
+}
+
+.footer_text {
+    margin: 0;
+    font-size: 0.95rem; /* Slightly larger font size */
+    line-height: 1.5;
+    color: var(--color-text-primary); /* Ensure primary text for main message */
+}
+
+.footerLink {
+    color: var(--color-text-secondary); /* Ensure secondary text color for links */
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.footerLink:hover {
+    color: var(--color-accent-red); /* Ensure red on hover */
+    text-decoration: underline;
+}
+
+.footerLinks {
+    display: flex;
+    justify-content: center;
+    gap: 2rem; /* Increased space between links */
+    flex-wrap: wrap;
+    margin-top: 1rem; /* Space above links */
+}
+
+.copyright {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary); /* Ensure consistent secondary color */
+    margin-top: 1rem; /* Space above copyright */
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 1.5rem 1.5rem;
+        margin-top: 2rem;
+    }
+    .footerContent {
+        gap: 1rem;
+    }
+    .footer_text {
+        font-size: 0.9rem;
+    }
+    .footerLinks {
+        gap: 1.5rem;
+    }
+    .footerLink {
+        font-size: 0.9rem;
+    }
+    .copyright {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 1rem 1rem;
+        margin-top: 1.5rem;
+    }
+    .footer_text {
+        font-size: 0.85rem;
+    }
+    .footerLinks {
+        gap: 1rem;
+        flex-direction: column;
+        align-items: center;
+    }
+    .footerLink {
+        font-size: 0.85rem;
+    }
+    .copyright {
+        font-size: 0.75rem;
+    }
+}

@@ -1,0 +1,192 @@
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block; /* So the link takes up the card's space */
+}
+
+.card {
+    margin-right: 0.75rem; /* Consistent margin */
+    border-radius: 4px;
+    background-color: var(--color-background-medium); /* Use medium background */
+    transition: transform 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    border: 1px solid var(--color-border-dark); /* Subtle border */
+}
+
+.card:hover {
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7); /* Darker shadow on hover */
+}
+
+.posterWrapper {
+  width: 100%;
+  height: 300px;
+  position: relative;
+  background-color: var(--color-border); /* Use border color for placeholder */
+}
+
+.posterImage {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.cardClickableArea {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Take full height of the card */
+}
+
+.info {
+    padding: 0.75rem; /* Consistent padding */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: var(--color-text-primary); /* Ensure primary text for info */
+}
+
+.title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0; /* Consistent margin */
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 2.6em;
+}
+
+.meta {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary); /* Use secondary text color */
+    margin-top: 0.5rem; /* Consistent margin */
+}
+
+.year {
+    margin-right: 0.5rem; /* Consistent margin */
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+}
+
+.rating span {
+    margin-left: 4px; /* Space between star and rating number */
+    font-weight: bold;
+}
+
+/* Progress Bar for Continue Watching */
+.progressBarContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.1); /* More subtle transparent white background */
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background-color: var(--color-accent-red);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* Action buttons like Favorite and Watchlist */
+.actionButtonsWrapper {
+  position: absolute;
+  top: 0.75rem; /* Consistent positioning */
+  right: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 5;
+}
+
+.actionButton {
+  background-color: var(--color-background-dark); /* Darker semi-transparent background */
+  color: var(--color-text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.2); /* More subtle border */
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.actionButton:hover {
+  background-color: rgba(0, 0, 0, 0.95); /* Even darker on hover */
+  border-color: var(--color-text-primary); /* White border on hover */
+}
+
+.favoriteButtonActive,
+.watchlistButtonActive {
+  background-color: var(--color-accent-red);
+  border-color: var(--color-accent-red);
+}
+
+.favoriteButtonActive:hover,
+.watchlistButtonActive:hover {
+  background-color: var(--color-accent-red-hover);
+  border-color: var(--color-accent-red-hover);
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 180px;
+  }
+
+  .posterWrapper {
+    height: 270px;
+  }
+
+  .title {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    width: 150px;
+  }
+
+  .posterWrapper {
+    height: 225px;
+  }
+
+  .title {
+    font-size: 0.8rem;
+  }
+}
+
+.titleWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 5px;
+}
+.card.cardLarge {
+  width: 250px;
+}
+
+.card.cardLarge .posterWrapper {
+  height: 375px;
+}

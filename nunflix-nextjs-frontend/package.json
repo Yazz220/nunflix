@@ -1,0 +1,35 @@
+{
+  "name": "nunflix-nextjs-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:populate": "bun scripts/populate_db.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.0",
+    "@types/nprogress": "^0.2.3",
+    "next": "15.3.3",
+    "nprogress": "^0.2.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-icons": "^5.5.0",
+    "react-player": "^2.16.0",
+    "zustand": "^5.0.5"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.3",
+    "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5"
+  }
+}

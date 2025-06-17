@@ -1,0 +1,115 @@
+.panelOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85); /* Darker overlay */
+  z-index: 1000; /* Ensure it's above other content */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to top */
+  padding-top: 60px; /* Space from top, adjust as needed */
+  overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+.panelContent {
+  background-color: #141414; /* Dark background for the panel itself */
+  padding: 20px 40px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 900px; /* Max width of the panel */
+  position: relative;
+  color: #fff;
+  max-height: calc(100vh - 80px); /* Max height considering padding */
+  overflow-y: auto; /* Scroll within the panel content if it's too long */
+}
+
+.closeButton {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+}
+
+.closeButton:hover {
+  color: #e50914; /* Nunflix red for hover */
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.sectionTitle {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #333; /* Separator for section title */
+  display: flex;
+  align-items: center;
+}
+
+/* Placeholder for icon styling if we add them later */
+.sectionTitle svg {
+  margin-right: 10px;
+  font-size: 1.5rem;
+}
+
+.filterGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Responsive grid */
+  gap: 15px;
+}
+
+.filterItem {
+  display: block;
+  background-color: #333;
+  color: #fff;
+  padding: 12px 15px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  text-align: center;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.filterItem:hover {
+  background-color: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .panelContent {
+    padding: 20px;
+    max-width: 95%;
+    margin-top: 20px; /* More space from top on smaller screens */
+  }
+
+  .filterGrid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  .sectionTitle {
+    font-size: 1.4rem;
+  }
+
+  .filterItem {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .filterGrid {
+    grid-template-columns: 1fr; /* Single column on very small screens */
+  }
+}

@@ -1,0 +1,186 @@
+.row {
+  margin-left: 2.5rem; /* Consistent padding with Header */
+  color: var(--color-text-primary); /* Ensure white text */
+  margin-bottom: 2rem; /* Consistent margin */
+}
+
+.row_posters {
+  display: flex;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  padding: 1.25rem 0; /* Consistent padding */
+  scroll-behavior: smooth;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.row_posters::-webkit-scrollbar {
+  display: none;
+}
+
+/* Base styles for all posters/cards in the carousel */
+.carouselItem {
+  object-fit: contain;
+  width: 200px;
+  margin-right: 0.75rem; /* Consistent margin between items */
+  transition: transform 450ms;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Darker shadow for items */
+}
+
+.carouselItem:hover {
+  transform: scale(1.08);
+}
+
+.rowTitle {
+  font-size: 1.5rem; /* Consistent title size */
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--color-text-primary); /* Ensure primary text color */
+}
+
+.rowHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.arrowButtonGroup {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.arrowButton {
+    background-color: var(--color-background-medium); /* Use medium background */
+    color: var(--color-text-primary); /* Use primary text color */
+    border: 1px solid var(--color-border); /* Use consistent border */
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem; /* Consistent padding */
+    font-size: 1.2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.arrowButton:hover {
+    background-color: var(--color-background-light); /* Use lighter background on hover */
+    border-color: var(--color-text-secondary); /* Subtle border change on hover */
+}
+
+.arrowButton:disabled {
+    background-color: var(--color-border-dark);
+    color: var(--color-text-secondary);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.headerLinkButton {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+}
+.headerLinkButton:hover {
+    color: var(--color-text-primary);
+}
+
+.emptyMessage {
+    color: var(--color-text-secondary);
+    font-style: italic;
+    padding-left: 2.5rem; /* Match row margin */
+}
+
+/* Skeleton loading styles */
+.row_posters_loading {
+  display: flex;
+  overflow: hidden;
+  padding: 1.25rem 0; /* Consistent padding */
+  gap: 0.75rem; /* Consistent gap */
+}
+
+.carouselItemWrapper {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .row {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .row_posters {
+    padding: 1rem 0;
+  }
+  .rowTitle {
+    font-size: 1.4rem;
+  }
+  .emptyMessage {
+    padding-left: 1.5rem;
+  }
+  .carouselItem {
+    width: 180px;
+  }
+  .carouselItemWrapper {
+    width: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .row {
+    margin-left: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .row_posters {
+    padding: 0.75rem 0;
+  }
+  .rowTitle {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+  .emptyMessage {
+    padding-left: 1rem;
+  }
+  .carouselItem {
+    width: 150px;
+  }
+  .carouselItemWrapper {
+    width: 150px;
+  }
+  .arrowButton {
+    padding: 0.4rem 0.6rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .row {
+    margin-left: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .row_posters {
+    padding: 0.5rem 0;
+  }
+  .rowTitle {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  .emptyMessage {
+    padding-left: 0.75rem;
+  }
+  .carouselItem {
+    width: 120px;
+  }
+  .carouselItemWrapper {
+    width: 120px;
+  }
+  .arrowButton {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.9rem;
+  }
+}

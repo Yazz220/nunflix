@@ -1,0 +1,65 @@
+.dropdownPanel {
+  position: absolute;
+  top: 100%; /* Position below the nav item */
+  left: 0;
+  background-color: #181818; /* Dark background like screenshots */
+  border: 1px solid #282828;
+  border-top: none; /* No top border as it connects to header */
+  border-radius: 0 0 4px 4px; /* Rounded bottom corners */
+  padding: 20px;
+  z-index: 110; /* Above navbar, below burger menu overlay if active */
+  min-width: 400px; /* Minimum width, adjust as needed */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out, visibility 0.2s ease-in-out;
+}
+
+/* This class will be added dynamically in Header.tsx when activeDropdown matches */
+/* We'll handle this logic in Header.module.css or directly in Header.tsx for simplicity */
+/* For now, this is a placeholder if we decide to toggle via CSS classes on DropdownPanel itself */
+.dropdownPanel.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdownTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+}
+
+/* Placeholder for icon styling if we add them later */
+.dropdownTitle svg {
+  margin-right: 8px;
+  font-size: 1.2rem;
+}
+
+.dropdownGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns as per screenshots */
+  gap: 10px 15px; /* Row and column gap */
+}
+
+.dropdownItem {
+  display: block;
+  color: #b3b3b3;
+  padding: 8px 0; /* Padding for each item */
+  text-decoration: none;
+  font-size: 0.9rem;
+  border-radius: 3px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.dropdownItem:hover {
+  color: #fff;
+  /* background-color: #333; Optional: hover background for items */
+}

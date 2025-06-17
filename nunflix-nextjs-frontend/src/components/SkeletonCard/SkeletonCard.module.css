@@ -1,0 +1,50 @@
+.skeletonCard {
+  background-color: var(--color-background-medium); /* Use medium background */
+  border-radius: 4px; /* Consistent border-radius */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* Width is determined by .carouselItemWrapper (160px) */
+  /* Height will be posterArea height + infoArea padding + infoArea content placeholders */
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.posterArea {
+  width: 100%;
+  height: 250px; /* Match ContentCard poster height */
+  background-color: var(--color-background-light); /* Use light background for poster placeholder */
+}
+
+.infoArea {
+  padding: 0.75rem; /* Consistent padding */
+  background-color: var(--color-background-medium); /* Match card background */
+  flex-grow: 1;
+}
+
+.titlePlaceholder {
+  height: 1.3em;
+  width: 80%;
+  background-color: var(--color-border); /* Use border color for placeholder */
+  border-radius: 4px;
+  margin-bottom: 0.5rem; /* Consistent margin */
+}
+
+.metaPlaceholder {
+  height: 0.8em;
+  width: 50%;
+  background-color: var(--color-border); /* Use border color for placeholder */
+  border-radius: 4px;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}

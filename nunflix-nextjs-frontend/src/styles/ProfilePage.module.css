@@ -1,0 +1,151 @@
+.pageContainer {
+  padding-top: 70px;
+  min-height: 100vh;
+  color: var(--color-text-primary);
+  background-color: var(--color-background-dark);
+}
+
+.mainContent {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: var(--color-background-medium); /* Slightly lighter background for the content area */
+  border-radius: 6px; /* Consistent border-radius */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6); /* Darker shadow */
+}
+
+.profileHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  padding: 2.5rem; /* Consistent padding */
+  background-color: var(--color-background-light); /* Lighter background for header section */
+  border-radius: 6px;
+  text-align: center;
+  border: 1px solid var(--color-border-dark); /* Subtle border */
+}
+
+.avatarWrapper {
+  margin-bottom: 1.5rem; /* Consistent margin */
+}
+
+.avatar {
+  border-radius: 50%;
+  border: 3px solid var(--color-border); /* Use consistent border */
+  object-fit: cover;
+  box-shadow: 0 0 0 5px rgba(229, 9, 20, 0.2); /* Subtle red glow */
+}
+
+.username {
+  font-size: 2.5rem; /* Larger font for username */
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-primary);
+}
+
+.email {
+  font-size: 1.1rem; /* Slightly larger email font */
+  color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.joinDate {
+  font-size: 0.95rem; /* Adjusted font size */
+  color: var(--color-text-secondary);
+}
+
+.profileSection {
+  margin-bottom: 2.5rem; /* Consistent section margin */
+  padding: 1.5rem; /* Consistent padding */
+  background-color: var(--color-background-medium); /* Use medium background */
+  border-radius: 6px;
+  border: 1px solid var(--color-border-dark); /* Subtle border */
+}
+
+.sectionTitle {
+  font-size: 1.8rem; /* Consistent section title size */
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.profileSection p {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem; /* Consistent font size */
+}
+
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    margin: 1.5rem auto;
+    padding: 1.5rem;
+  }
+  .profileHeader {
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+  .avatarWrapper {
+    margin-bottom: 1rem;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+  }
+  .username {
+    font-size: 2rem;
+  }
+  .email {
+    font-size: 1rem;
+  }
+  .joinDate {
+    font-size: 0.9rem;
+  }
+  .profileSection {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .sectionTitle {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .profileSection p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainContent {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+  .profileHeader {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .avatar {
+    width: 80px;
+    height: 80px;
+  }
+  .username {
+    font-size: 1.8rem;
+  }
+  .email {
+    font-size: 0.9rem;
+  }
+  .sectionTitle {
+    font-size: 1.3rem;
+  }
+  .profileSection p {
+    font-size: 0.85rem;
+  }
+}

@@ -1,107 +1,127 @@
-# Nunflix Clone
+# Nunflix
 
-## Project Description
-This project is a functional clone of the Nunflix streaming website, built with a modern React front-end. The goal is to replicate the core functionalities and user experience of Nunflix, including content browsing, search, playback, and user-specific features like watch history and a personalized watchlist.
+Nunflix is a modern, feature-rich media streaming clone built with Next.js and Supabase. It allows users to discover movies and TV shows, view detailed information (cast, trailers, similar content), and stream content.
 
-## Features Implemented
-*   **Front-End Structure**: React Single Page Application (SPA) with routing for different sections.
-*   **Navigation**: `Header` component with navigation links ("Streaming", "Discover") and a responsive side menu.
-*   **Home Page**:
-    *   **Hero Section**: Dynamic featured content display with "Watch Now" button, bookmark icon for "My List", and navigation dots. Prioritizes "How to Train Your Dragon" for demonstration.
-    *   **Content Carousels**:
-        *   "Continue Watching": Displays content with progress bars and episode information (dummy data).
-        *   "Live Sports": Displays live event cards with "LIVE" tags (dummy data).
-        *   "Trending": Toggle for "Day" and "Week" trending content from TMDB.
-        *   "Netflix Picks", "Prime Shows", "Marvel Studios", "CW": Dynamically fetched content from TMDB based on production companies, with "Movies" and "TV Shows" toggles for studio-specific carousels.
-        *   "Emotional Journeys": Dynamically fetched content from TMDB using the "Drama" genre.
-*   **Content Pages**:
-    *   `Movies.tsx` and `TVShows.tsx`: Display content from TMDB with genre filtering.
-    *   `Streaming.tsx`: Polished page with hero/banner and demo live stream cards.
-    *   `Discover.tsx`: A filtering hub with content type, genre, year, and sort-by options, including "Anime" (Animation genre).
-*   **Search Functionality**: `SearchResults.tsx` groups results by type (Movies, TV Shows) and handles "no results found."
-*   **Details Page (`Details.tsx`)**:
-    *   Displays full content details including title, year, genre, rating, and plot.
-    *   "Watch Now" button links to the player page.
-    *   **Recommendations**: "More Like This" section powered by TMDB's recommendations API, displayed in a scrollable carousel using `ContentCarousel`.
-    *   **Cast & Crew**: Fetches and displays cast and crew details from TMDB, presented in scrollable lists using reusable `PersonCard` components.
-    *   **Loading State**: Implements a skeleton loader for a smoother user experience during data fetching.
-*   **Player Page (`Player.tsx`)**:
-    *   Modern video player with HLS.js support for `.m3u8` streams and `<iframe>` support for embed URLs.
-    *   Back button for navigation.
-    *   Initializes `hls.js` and includes a reminder to install it (`npm install hls.js`).
-    *   Adds content to "Watch History" upon viewing.
-*   **Subtitles Support**: Dynamically loads and displays `.vtt` subtitles for HLS streams (dummy subtitle URLs used for now).
-*   **Monetization**: Placeholder `AdBanner.tsx` component integrated into Home and Details pages.
-*   **Watch History**:
-    *   `WatchHistory.tsx` page to view recently watched content.
-    *   `watchHistory` state in `useStore.ts` with `localStorage` persistence.
-    *   "Clear All" button to clear history.
-*   **My List (Watchlist)**:
-    *   `myList` state in `useStore.ts` with `localStorage` persistence.
-    *   `addToMyList` and `removeFromMyList` actions.
-    *   Bookmark icon in `HeroSection.tsx` to toggle content in/out of "My List".
-    *   `MyList.tsx` page to display bookmarked content.
-    *   "Clear All" button for "My List".
+## Features
+
+*   **Content Discovery:** Browse and filter movies and TV shows by genre.
+*   **Detailed Content Pages:** View comprehensive details for each title, including:
+    *   Overview and synopsis
+    *   Release date and runtime
+    *   Cast and crew information
+    *   Trailers and video clips (from YouTube)
+    *   Similar titles recommendations
+    *   Episode listings for TV shows with direct play options
+*   **Video Playback:** Seamless streaming experience for selected content.
+*   **Pagination & Sorting:** Navigate through extensive content libraries with ease.
+*   **User Authentication (Planned/Future):** Placeholder for authentication features.
+*   **Responsive Design:** Optimized for various screen sizes.
 
 ## Technologies Used
-*   **Front-end**: React (with TypeScript)
-*   **Styling**: Tailwind CSS
-*   **State Management**: Zustand
-*   **Routing**: React Router DOM
-*   **Video Playback**: HLS.js (for HLS streams)
-*   **API**: The Movie Database (TMDB) API
+
+*   **Next.js:** A React framework for production-grade applications.
+*   **Supabase:** An open-source Firebase alternative providing a Postgres database, authentication, and storage.
+*   **TMDB (The Movie Database) API:** Used to fetch rich movie and TV show metadata.
+*   **ReactPlayer:** A versatile React component for playing various media URLs.
+*   **Bun:** A fast all-in-one JavaScript runtime, bundler, test runner, and package manager.
+*   **TypeScript:** For type safety and improved developer experience.
+*   **CSS Modules:** For scoped component styling.
 
 ## Setup Instructions
 
+Follow these steps to get your Nunflix project up and running locally.
+
 ### Prerequisites
-*   Node.js (LTS version recommended)
-*   npm or yarn
 
-### Installation
+*   **Git:** For cloning the repository.
+*   **Node.js & npm/Yarn/Bun:** Make sure you have Node.js installed. Bun is recommended for this project.
+    *   [Install Bun](https://bun.sh/docs/installation)
+*   **Supabase CLI:** Although some database operations can be done through the Supabase UI, having the CLI is beneficial.
+    *   [Install Supabase CLI](https://supabase.com/docs/guides/cli/getting-started)
 
-1.  **Clone the repository**:
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/YazidOuldFouda/nunflix.git
+cd nunflix/nunflix-nextjs-frontend
+```
+
+### 2. Environment Variables
+
+Create a `.env.local` file in the `nunflix-nextjs-frontend` directory (if it doesn't exist) and add your Supabase and TMDB API keys:
+
+```
+NEXT_PUBLIC_SUPABASE_URL="YOUR_SUPABASE_PROJECT_URL"
+SUPABASE_SERVICE_KEY="YOUR_SUPABASE_SERVICE_ROLE_KEY"
+TMDB_API_KEY="YOUR_TMDB_API_KEY"
+```
+
+*   **`NEXT_PUBLIC_SUPABASE_URL`**: Find this in your Supabase project settings -> API. It looks like `https://your-project-ref.supabase.co`.
+*   **`SUPABASE_SERVICE_KEY`**: Found in your Supabase project settings -> API -> Project API keys. Use the `service_role` key. **Keep this key secret!**
+*   **`TMDB_API_KEY`**: Obtain this from [The Movie Database API](https://www.themoviedb.org/documentation/api). Sign up, go to settings -> API, and request a Developer API key.
+
+### 3. Install Dependencies
+
+Navigate to the `nunflix-nextjs-frontend` directory and install the project dependencies using Bun:
+
+```bash
+bun install
+```
+
+### 4. Database Setup (Supabase)
+
+Before populating data, ensure your Supabase project has the necessary tables.
+
+*   **Link Supabase Project:**
     ```bash
-    git clone https://github.com/your-repo/nunflix-clone.git
-    cd nunflix-clone
+    cd supabase # Navigate to the supabase directory
+    supabase login # Log in to your Supabase account
+    supabase link --project-ref YOUR_SUPABASE_PROJECT_REF # Link your local project to your Supabase project
     ```
+    (Replace `YOUR_SUPABASE_PROJECT_REF` with the reference from your Supabase project URL, e.g., `kveihttvszgvmzzvnmqo`).
 
-2.  **Install dependencies**:
+*   **Run Migrations:** Apply the database schema migrations.
     ```bash
-    npm install
-    # or
-    yarn install
+    supabase db push
     ```
-    You might also need to install `hls.js` if it's not automatically installed:
+    If you encounter "relation already exists" errors, you might need to drop the tables or selectively run migrations. Refer to Supabase documentation for advanced migration handling.
+
+*   **Populate Data:** Run the script to populate your `titles` and `episodes` tables with data, enriched from TMDB.
     ```bash
-    npm install hls.js
-    # or
-    yarn add hls.js
+    cd .. # Go back to nunflix-nextjs-frontend
+    bun run scripts/populate_db.ts
     ```
+    This script fetches data from `db.json` and enriches it with details from the TMDB API before inserting into Supabase.
 
-3.  **Set up TMDB API Key**:
-    The project uses the TMDB API. Ensure your TMDB API key is available in `src/store/useStore.ts` (currently hardcoded as `4314ec40a0c67a8501b5b69e830c09d1`). In a production environment, this should be an environment variable.
+### 5. Run the Development Server
 
-4.  **Run the application**:
-    ```bash
-    npm start
-    # or
-    yarn start
-    ```
-    The application will typically open in your browser at `http://localhost:3000`.
+Once the database is set up and populated, start the Next.js development server:
 
-## Future Enhancements
-(Based on initial architectural analysis from `Indeed.md` and ongoing plans)
-*   **User Authentication**: Implement user login/registration.
-*   **Backend Integration**: Connect to a Node.js/Laravel backend for dynamic content management, user profiles, and more robust data handling.
-*   **External Video Source Integration**: Implement a more sophisticated system for managing and integrating external video sources (cyberlockers, direct links) including robust error handling and fallback mechanisms.
-*   **Advanced Search Filters**: Expand search capabilities with more granular filtering options (e.g., release year range, cast, crew).
-*   **Personalized Recommendations**: Implement a recommendation engine based on user viewing habits.
-*   **User Profiles & Playlists**: Allow users to create multiple profiles and curate custom playlists.
-*   **Comments & Ratings**: Enable users to comment on and rate content.
-*   **Live Streaming Features**: Enhance live sports section with real-time updates and more detailed event information.
-*   **Payment Gateway Integration**: For subscription models or premium content.
-*   **Containerization**: Dockerize the application for easier deployment.
-*   **CI/CD Pipeline**: Set up automated deployment workflows.
-*   **Optimized Performance**: Implement further performance optimizations for large datasets and heavy traffic.
+```bash
+bun dev
+```
 
-Feel free to explore the codebase and contribute!
+The application should now be accessible at `http://localhost:3000`.
+
+## Project Structure
+
+*   `nunflix-nextjs-frontend/`: The main Next.js application.
+    *   `src/pages/`: Next.js pages (routes) for the application.
+    *   `src/components/`: Reusable React components.
+    *   `src/lib/`: Utility functions and Supabase client setup.
+    *   `src/stores/`: Zustand stores for state management.
+    *   `src/styles/`: Global and module-specific CSS.
+    *   `scripts/`: Scripts for database population (`populate_db.ts`).
+    *   `supabase/`: Supabase CLI configuration and migration files.
+
+## Usage
+
+*   Open your browser to `http://localhost:3000`.
+*   Browse movies and TV shows.
+*   Click on a title to see its detailed page.
+*   For TV shows, select seasons to view episodes.
+*   Click the "Play" button to stream content (if a valid `embed_url` is available from your `db.json` or source).
+
+## Contributing
+
+Contributions are welcome! If you find a bug or want to suggest an enhancement, please open an issue or submit a pull request. 
