@@ -4,12 +4,24 @@ import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useInView } from 'react-intersection-observer';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import ContentCard, { ContentCardProps } from '@/components/ContentCard/ContentCard';
 import SkeletonCard from '@/components/SkeletonCard/SkeletonCard';
 import styles from '@/styles/ExplorePage.module.css';
 
-const fetchDiscover = async ({ pageParam = 1, queryKey }: any) => {
+interface DiscoverResult {
+  page: number;
+  results: ContentCardProps[];
+  total_pages: number;
+  total_results: number;
+}
+
+interface Genre {
+    id: number;
+    name: string;
+}
+
+const fetchDiscover = async ({ pageParam = 1, queryKey }: any): Promise<DiscoverResult> => {
   const [_key, { media_type, genre, sort, year }] = queryKey;
   const res = await fetch(`/api/v1/discover?media_type=${media_type}&page=${pageParam}&genre_id=${genre}&sort_by=${sort}&year=${year}`);
   if (!res.ok) {
@@ -17,6 +29,15 @@ const fetchDiscover = async ({ pageParam = 1, queryKey }: any) => {
   }
   return res.json();
 };
+
+const fetchGenres = async ({ queryKey }: any): Promise<{ genres: Genre[] }> => {
+  const [_key, { media_type }] = queryKey;
+  const res = await fetch(`/api/v1/genres?media_type=${media_type}`);
+  if (!res.ok) {
+    throw new Error('Failed to fetch genres');
+  }
+  return res.json();
+}
 
 const DiscoverPage: NextPage = () => {
   const router = useRouter();
@@ -29,17 +50,31 @@ const DiscoverPage: NextPage = () => {
   const { ref, inView } = useInView();
 
   const {
+    data: genresData,
+    error: genresError,
+    isLoading: genresLoading,
+  } = useQuery({
+    queryKey: ['genres', { media_type: mediaType }],
+    queryFn: fetchGenres,
+  });
+
+  const {
     data,
     error,
     fetchNextPage,
     hasNextPage,
     isFetching,
     isFetchingNextPage,
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<DiscoverResult, Error>({
     queryKey: ['discover', { media_type: mediaType, genre: selectedGenre, sort: sortBy, year: selectedYear }],
     queryFn: fetchDiscover,
     initialPageParam: 1,
-    getNextPageParam: (lastPage: any, pages: any) => pages.length + 1,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.page < lastPage.total_pages) {
+        return lastPage.page + 1;
+      }
+      return undefined;
+    },
   });
 
   useEffect(() => {
@@ -47,6 +82,11 @@ const DiscoverPage: NextPage = () => {
       fetchNextPage();
     }
   }, [inView, fetchNextPage]);
+
+  useEffect(() => {
+    // When mediaType changes, reset the genre
+    setSelectedGenre('');
+  }, [mediaType]);
 
   useEffect(() => {
     router.push(
@@ -69,9 +109,11 @@ const DiscoverPage: NextPage = () => {
             <option value="movie">Movies</option>
             <option value="tv">TV Shows</option>
           </select>
-          <select value={selectedGenre} onChange={(e) => setSelectedGenre(e.target.value)}>
+          <select value={selectedGenre} onChange={(e) => setSelectedGenre(e.target.value)} disabled={genresLoading}>
             <option value="">All Genres</option>
-            {/* Add genre options here */}
+            {genresData?.genres?.map((genre: Genre) => (
+              <option key={genre.id} value={genre.id}>{genre.name}</option>
+            ))}
           </select>
           <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
             <option value="popularity.desc">Popularity Descending</option>
@@ -90,10 +132,13 @@ const DiscoverPage: NextPage = () => {
         </div>
         <div className={styles.grid}>
           {data?.pages.map((page, i) => (
-            <React.Fragment key={i}>
-              {(page as ContentCardProps[]).map((item: ContentCardProps) => (
-                <Link href={`/title/${item.id}?type=${item.media_type}`} key={item.id}>
-                  <ContentCard {...item} />
+            <React.Fragment key={`page-${i}`}>
+              {page.results.map((item: ContentCardProps) => (
+                <Link
+                  href={`/title/${item.id}?type=${mediaType}`}
+                  key={item.id}
+                  legacyBehavior>
+                  <ContentCard {...item} media_type={mediaType as 'movie' | 'tv'} />
                 </Link>
               ))}
             </React.Fragment>

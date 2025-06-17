@@ -75,6 +75,11 @@ const ContentCard: React.FC<ContentCardProps> = ({
       return;
     }
 
+    if (!media_type) {
+      setGlobalError('Cannot perform this action: media type is missing.');
+      return;
+    }
+
     if (type === 'favorite') {
       if (isLoadingFavorite) return;
       setIsLoadingFavorite(true);

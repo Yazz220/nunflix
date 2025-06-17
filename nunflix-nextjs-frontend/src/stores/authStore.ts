@@ -23,6 +23,8 @@ interface User {
   username: string;
   email: string;
   avatar_url?: string;
+  display_name?: string;
+  bio?: string;
   createdAt?: string;
   favorites?: FavoriteItem[];
   watchlist?: FavoriteItem[];
@@ -86,7 +88,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   fetchUser: async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-      set({ user: user as unknown as User, isAuthenticated: true });
+      const profile: User = {
+        id: user.id,
+        email: user.email || '',
+        username: user.user_metadata.username || user.email || '',
+        avatar_url: user.user_metadata.avatar_url,
+        display_name: user.user_metadata.display_name,
+        bio: user.user_metadata.bio,
+        createdAt: user.created_at,
+      };
+      set({ user: profile, isAuthenticated: true });
       
       const { data: favorites, error: favoritesError } = await supabase.from('favorites').select('*, titles(*)').eq('user_id', user.id);
       if (favoritesError) console.error('Error fetching favorites:', favoritesError);

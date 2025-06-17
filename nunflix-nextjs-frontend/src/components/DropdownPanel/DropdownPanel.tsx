@@ -33,7 +33,7 @@ const DropdownPanel: React.FC<DropdownPanelProps> = ({
       <h3 className={styles.dropdownTitle}>{title}</h3>
       <div className={styles.dropdownGrid}>
         {items.map((item) => (
-          <Link key={item.name} href={item.href}>
+          <Link key={item.name} href={item.href} legacyBehavior>
             <span className={styles.dropdownItem} onClick={onLinkClick}>
               {item.name}
             </span>

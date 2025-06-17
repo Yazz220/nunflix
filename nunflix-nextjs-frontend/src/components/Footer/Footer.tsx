@@ -15,9 +15,9 @@ const Footer: React.FC = () => {
           </a>
         </p>
         <div className={styles.footerLinks}>
-          <Link href="/dmca" passHref><span className={styles.footerLink}>DMCA</span></Link>
-          <Link href="/privacy" passHref><span className={styles.footerLink}>Privacy Policy</span></Link>
-          <Link href="/terms" passHref><span className={styles.footerLink}>Terms of Service</span></Link>
+          <Link href="/dmca" passHref legacyBehavior><span className={styles.footerLink}>DMCA</span></Link>
+          <Link href="/privacy" passHref legacyBehavior><span className={styles.footerLink}>Privacy Policy</span></Link>
+          <Link href="/terms" passHref legacyBehavior><span className={styles.footerLink}>Terms of Service</span></Link>
         </div>
         <p className={styles.copyright}>
           &copy; {currentYear} Nunflix. All Rights Reserved. (This is a fictional site)

@@ -38,10 +38,10 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
       <div className={styles.banner_content}>
         <h1 className={styles.banner_title}>{title}</h1>
         <div className={styles.banner_buttons}>
-          <Link href={`/watch/${id}?type=${media_type}`} passHref>
+          <Link href={`/watch/${id}?type=${media_type}`} passHref legacyBehavior>
             <button className={styles.banner_button}>Play</button>
           </Link>
-          <Link href={`/title/${id}?type=${media_type}`} passHref>
+          <Link href={`/title/${id}?type=${media_type}`} passHref legacyBehavior>
             <button className={styles.banner_button}>More Info</button>
           </Link>
         </div>

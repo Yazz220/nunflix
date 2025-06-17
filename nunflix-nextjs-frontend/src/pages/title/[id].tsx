@@ -158,7 +158,6 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
         <title>{details.title} - Nunflix</title>
         <meta name="description" content={details.overview || `Details for ${details.title}`} />
       </Head>
-
       <header
         className={styles.heroSection}
         style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.8) 70%, #0a0a0a 100%), url(${backdropUrl})`}}
@@ -217,7 +216,6 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
           </div>
         </div>
       </header>
-
       <main className={styles.mainDetailContent}>
         {details.credits && (
           <section className={styles.section}>
@@ -285,7 +283,9 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
               <div className={styles.episodesGrid}>
                 {currentSeasonEpisodes.map(episode => (
                   <div key={episode.id} className={styles.episodeCard}> {/* Placeholder for EpisodeCard component */}
-                    <Link href={`/watch/${details.id}?type=tv&season=${selectedSeasonNumber}&episode=${episode.episode_number}`}>
+                    <Link
+                      href={`/watch/${details.id}?type=tv&season=${selectedSeasonNumber}&episode=${episode.episode_number}`}
+                      legacyBehavior>
                       {/* Basic Episode Info - to be replaced by EpisodeCard component */}
                       <div className={styles.episodeThumbnailPlaceholder}>
                         {episode.still_path ? (
@@ -313,7 +313,11 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
             <h2 className={styles.sectionTitle}>Similar Titles</h2>
             <div className={styles.similarGrid}>
               {details.similar.map((item: SimilarItem) => (
-                <Link key={item.id} href={`/title/${item.id}?type=${item.media_type}`} className={styles.similarCard}>
+                <Link
+                  key={item.id}
+                  href={`/title/${item.id}?type=${item.media_type}`}
+                  className={styles.similarCard}
+                  legacyBehavior>
                     <Image
                         src={item.poster_path ? `${TMDB_IMAGE_BASE_URL_W500}${item.poster_path}` : '/placeholder-poster.png'}
                         alt={item.title}

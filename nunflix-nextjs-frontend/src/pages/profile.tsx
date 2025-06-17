@@ -1,6 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 import { useAuthStore, ContinueWatchingItem as AuthContinueWatchingItem } from '@/stores/authStore';
 import { useUIStore } from '@/stores/uiStore'; // Import useUIStore
 import { useRouter } from 'next/router';
@@ -17,6 +17,8 @@ interface User {
   username: string;
   email: string;
   avatar_url?: string;
+  display_name?: string;
+  bio?: string;
   createdAt?: string;
 }
 
@@ -54,6 +56,13 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ error }) => {
   const [detailedContinueWatching, setDetailedContinueWatching] = useState<ContentCardProps[]>([]); // Added
   const [isLoadingContinueWatching, setIsLoadingContinueWatching] = useState(false); // Added
 
+  // State for profile editing
+  const [isEditing, setIsEditing] = useState(false);
+  const [displayName, setDisplayName] = useState('');
+  const [bio, setBio] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
+
   useEffect(() => {
     if (error) {
       router.replace('/login');
@@ -67,8 +76,49 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ error }) => {
         setGlobalError(message);
         router.replace('/login');
       });
+    } else if (authStoreUser) {
+      // Pre-fill editing form state when user data is available
+      setDisplayName(authStoreUser.display_name || authStoreUser.username || '');
+      setBio(authStoreUser.bio || '');
+      setAvatarUrl(authStoreUser.avatar_url || '');
     }
   }, [error, router, isAuthenticated, authStoreUser, token, fetchUser]);
+
+  const handleProfileUpdate = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!authStoreUser) return;
+
+    setIsUpdating(true);
+    try {
+      const response = await fetch('/api/v1/profile/me', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          display_name: displayName,
+          bio: bio,
+          avatar_url: avatarUrl,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update profile.');
+      }
+
+      // Refresh user data in the store
+      await fetchUser();
+
+      setIsEditing(false); // Exit editing mode on success
+    } catch (err: any) {
+      console.error('Failed to update profile:', err);
+      setGlobalError(err.message || 'An unexpected error occurred.');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   useEffect(() => {
     const fetchFavoriteDetails = async () => {
@@ -197,19 +247,72 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ error }) => {
       </Head>
       <main className={styles.mainContent}>
         <div className={styles.profileHeader}>
-          <div className={styles.avatarWrapper}>
-            <Image
-              src={displayUser.avatar_url || '/placeholder-poster.png'}
-              alt={`${displayUser.username}'s avatar`}
-              width={150}
-              height={150}
-              className={styles.avatar}
-              unoptimized={!displayUser.avatar_url}
-            />
-          </div>
-          <h1 className={styles.username}>{displayUser.username}</h1>
-          <p className={styles.email}>{displayUser.email}</p>
-          <p className={styles.joinDate}>Joined: {joinDate}</p>
+          {isEditing ? (
+            <form onSubmit={handleProfileUpdate} className={styles.editForm}>
+              <div className={styles.avatarWrapper}>
+                <Image
+                  src={avatarUrl || '/placeholder-poster.png'}
+                  alt="Avatar preview"
+                  width={150}
+                  height={150}
+                  className={styles.avatar}
+                />
+              </div>
+              <label htmlFor="displayName">Display Name</label>
+              <input
+                id="displayName"
+                type="text"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                className={styles.inputField}
+              />
+              <label htmlFor="avatarUrl">Avatar URL</label>
+              <input
+                id="avatarUrl"
+                type="text"
+                value={avatarUrl}
+                onChange={(e) => setAvatarUrl(e.target.value)}
+                className={styles.inputField}
+                placeholder="https://example.com/avatar.png"
+              />
+              <label htmlFor="bio">Bio</label>
+              <textarea
+                id="bio"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                className={styles.textareaField}
+                rows={3}
+              />
+              <div className={styles.formActions}>
+                <button type="submit" className={styles.saveButton} disabled={isUpdating}>
+                  {isUpdating ? 'Saving...' : 'Save Changes'}
+                </button>
+                <button type="button" className={styles.cancelButton} onClick={() => setIsEditing(false)}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          ) : (
+            <>
+              <div className={styles.avatarWrapper}>
+                <Image
+                  src={displayUser.avatar_url || '/placeholder-poster.png'}
+                  alt={`${displayUser.username}'s avatar`}
+                  width={150}
+                  height={150}
+                  className={styles.avatar}
+                  unoptimized={!displayUser.avatar_url}
+                />
+              </div>
+              <h1 className={styles.username}>{displayUser.display_name || displayUser.username}</h1>
+              <p className={styles.email}>{displayUser.email}</p>
+              {displayUser.bio && <p className={styles.bio}>{displayUser.bio}</p>}
+              <p className={styles.joinDate}>Joined: {joinDate}</p>
+              <button onClick={() => setIsEditing(true)} className={styles.editButton}>
+                Edit Profile
+              </button>
+            </>
+          )}
         </div>
 
         {/* Render Favorites */}
