@@ -134,7 +134,7 @@ const Header: React.FC = () => { // Re-adding the component definition
           <button onClick={handleBurgerMenuToggle} className={styles.burgerMenuButton}>
             ☰ {/* Unicode Burger Icon */}
           </button>
-          <Link href="/" passHref>
+          <Link href="/" legacyBehavior>
             <Image
               src="/nunflix-logo.png"
               alt="Nunflix Logo"
@@ -234,7 +234,7 @@ const Header: React.FC = () => { // Re-adding the component definition
             )}
           </div>
           {isAuthenticated ? (
-            <Link href="/profile" passHref>
+            <Link href="/profile" legacyBehavior>
               <Image
                 className={styles.navbar_avatar}
                 src={user?.avatar_url || "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"} // Use user avatar or placeholder
@@ -245,7 +245,7 @@ const Header: React.FC = () => { // Re-adding the component definition
               />
             </Link>
           ) : (
-            <Link href="/login" passHref>
+            <Link href="/login" legacyBehavior>
               <button className={styles.loginButton}>Login</button>
             </Link>
           )}

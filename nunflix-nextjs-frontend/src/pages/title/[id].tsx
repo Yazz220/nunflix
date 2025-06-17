@@ -285,7 +285,7 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
               <div className={styles.episodesGrid}>
                 {currentSeasonEpisodes.map(episode => (
                   <div key={episode.id} className={styles.episodeCard}> {/* Placeholder for EpisodeCard component */}
-                    <Link href={`/watch/${details.id}?type=tv&season=${selectedSeasonNumber}&episode=${episode.episode_number}`} passHref>
+                    <Link href={`/watch/${details.id}?type=tv&season=${selectedSeasonNumber}&episode=${episode.episode_number}`}>
                       {/* Basic Episode Info - to be replaced by EpisodeCard component */}
                       <div className={styles.episodeThumbnailPlaceholder}>
                         {episode.still_path ? (
@@ -313,7 +313,7 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
             <h2 className={styles.sectionTitle}>Similar Titles</h2>
             <div className={styles.similarGrid}>
               {details.similar.map((item: SimilarItem) => (
-                <Link key={item.id} href={`/title/${item.id}?type=${item.media_type}`} passHref className={styles.similarCard}>
+                <Link key={item.id} href={`/title/${item.id}?type=${item.media_type}`} className={styles.similarCard}>
                     <Image
                         src={item.poster_path ? `${TMDB_IMAGE_BASE_URL_W500}${item.poster_path}` : '/placeholder-poster.png'}
                         alt={item.title}
@@ -354,33 +354,24 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps<TitleDetailPageProps> = async (context) => {
-  const { id } = context.params as { id: string }; // Only id from params
-  // No need to get type from query here, it will be in the fetched details
+  const { id } = context.params as { id: string };
 
   if (!id) {
     return { notFound: true };
   }
 
   try {
-    const { data, error } = await supabase
-      .from('titles')
-      .select('id, title, overview, genres, runtime, episode_run_time, release_date, status, vote_average, vote_count, imdb_id, videos, credits, images, poster_path, backdrop_path, stream_sources, similar, media_type, number_of_seasons, number_of_episodes, seasons') // Select columns directly, assuming they are part of the 'titles' table
-      .eq('id', id)
-      .single();
-
-    if (error || !data) {
-      console.error(`Failed to fetch title details for ID ${id}:`, error);
-      return { notFound: true };
+    const res = await fetch(`http://localhost:3000/api/v1/title/${id}`);
+    if (!res.ok) {
+      throw new Error('Failed to fetch title details');
     }
-
-    const details = parseTitleDetails(data);
+    const details = await res.json();
 
     let initialEpisodes: Episode[] | null = null;
     let initialSeasonNumber: number | null = null;
 
-    // Use details.media_type instead of the 'type' from context.query
     if (details.media_type === 'tv' && details.seasons && details.seasons.length > 0) {
-      const firstSeason = details.seasons.find(s => s.season_number === 1) || details.seasons[0];
+      const firstSeason = details.seasons.find((s: any) => s.season_number === 1) || details.seasons[0];
       if (firstSeason) {
         initialSeasonNumber = firstSeason.season_number;
         const { data: episodes, error: episodesError } = await supabase
@@ -412,7 +403,7 @@ export const getStaticProps: GetStaticProps<TitleDetailPageProps> = async (conte
         details: null,
         error: 'Failed to load title details.',
       },
-      revalidate: 60, // Still revalidate on error, or consider a different strategy
+      revalidate: 60,
     };
   }
 };

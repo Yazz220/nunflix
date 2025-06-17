@@ -13,6 +13,7 @@ export interface ContentCardProps {
   id: number | string; // TMDB ID
   title: string;
   poster_path: string | null;
+  poster?: string;
   backdrop_path?: string | null;
   overview?: string;
   media_type: 'movie' | 'tv';
@@ -145,7 +146,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
           {isOnWatchlist ? '✓' : '+'}
         </button>
       </div>
-      <Link href={`/title/${numericId}?type=${media_type}`} passHref>
+      <Link href={`/title/${numericId}?type=${media_type}`}>
         <div className={styles.cardClickableArea}>
             <div className={styles.posterWrapper}>
               <Image

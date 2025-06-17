@@ -63,7 +63,7 @@ const BurgerMenuPanel: React.FC<BurgerMenuPanelProps> = ({ onClose }) => {
           <h2 className={styles.sectionTitle}>Movies</h2>
           <div className={styles.filterGrid}>
             {movieFilters.map((filter) => (
-              <Link key={filter.name} href={filter.href} passHref>
+              <Link key={filter.name} href={filter.href}>
                 <span className={styles.filterItem} onClick={onClose}>{filter.name}</span>
               </Link>
             ))}
@@ -74,7 +74,7 @@ const BurgerMenuPanel: React.FC<BurgerMenuPanelProps> = ({ onClose }) => {
           <h2 className={styles.sectionTitle}>Shows</h2>
           <div className={styles.filterGrid}>
             {showFilters.map((filter) => (
-              <Link key={filter.name} href={filter.href} passHref>
+              <Link key={filter.name} href={filter.href}>
                 <span className={styles.filterItem} onClick={onClose}>{filter.name}</span>
               </Link>
             ))}
@@ -85,7 +85,7 @@ const BurgerMenuPanel: React.FC<BurgerMenuPanelProps> = ({ onClose }) => {
           <h2 className={styles.sectionTitle}>Streaming</h2>
           <div className={styles.filterGrid}>
             {streamingFilters.map((filter) => (
-              <Link key={filter.name} href={filter.href} passHref>
+              <Link key={filter.name} href={filter.href}>
                 <span className={styles.filterItem} onClick={onClose}>{filter.name}</span>
               </Link>
             ))}
@@ -96,7 +96,7 @@ const BurgerMenuPanel: React.FC<BurgerMenuPanelProps> = ({ onClose }) => {
           <h2 className={styles.sectionTitle}>Discover</h2>
           <div className={styles.filterGrid}>
             {discoverFilters.map((filter) => (
-              <Link key={filter.name} href={filter.href} passHref>
+              <Link key={filter.name} href={filter.href}>
                 <span className={styles.filterItem} onClick={onClose}>{filter.name}</span>
               </Link>
             ))}

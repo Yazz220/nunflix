@@ -125,33 +125,11 @@ const HomePage: NextPage<HomePageProps> = ({ frontPageData, error }) => {
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
   try {
-    const [
-      titlesResponse,
-      trendingResponse,
-      popularMoviesResponse,
-      popularTvResponse,
-      topRatedResponse,
-    ] = await Promise.all([
-      supabase.from('titles').select('id, title, poster_path, media_type, watch_providers'),
-      supabase.from('titles').select('*').order('vote_average', { ascending: false }).limit(20),
-      supabase.from('titles').select('*').eq('media_type', 'movie').order('vote_count', { ascending: false }).limit(20),
-      supabase.from('titles').select('*').eq('media_type', 'tv').order('vote_count', { ascending: false }).limit(20),
-      supabase.from('titles').select('*').gt('vote_average', 8).order('vote_average', { ascending: false }).limit(20),
-    ]);
-
-    if (titlesResponse.error) throw titlesResponse.error;
-    if (trendingResponse.error) throw trendingResponse.error;
-    if (popularMoviesResponse.error) throw popularMoviesResponse.error;
-    if (popularTvResponse.error) throw popularTvResponse.error;
-    if (topRatedResponse.error) throw topRatedResponse.error;
-
-    const frontPageData: FrontPageData = {
-      trending: trendingResponse.data || [],
-      popular_movies: popularMoviesResponse.data || [],
-      popular_tv: popularTvResponse.data || [],
-      top_rated: topRatedResponse.data || [],
-      titles: titlesResponse.data || [],
-    };
+    const res = await fetch('http://localhost:3000/api/v1/frontpage');
+    if (!res.ok) {
+      throw new Error('Failed to fetch front page data');
+    }
+    const frontPageData = await res.json();
 
     return {
       props: {
@@ -160,7 +138,7 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
       revalidate: 3600, // Re-generate the page every hour
     };
   } catch (error: any) {
-    console.error('Failed to fetch frontpage data in getServerSideProps:', error);
+    console.error('Failed to fetch frontpage data in getStaticProps:', error);
     return {
       props: {
         frontPageData: null,

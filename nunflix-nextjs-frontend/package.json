@@ -10,13 +10,19 @@
     "db:populate": "bun scripts/populate_db.ts"
   },
   "dependencies": {
+    "@sentry/nextjs": "^9.29.0",
     "@supabase/supabase-js": "^2.50.0",
+    "@tanstack/react-query": "^5.80.7",
+    "@tanstack/react-query-devtools": "^5.80.7",
     "@types/nprogress": "^0.2.3",
+    "@upstash/ratelimit": "^2.0.5",
+    "@vercel/kv": "^3.0.0",
     "next": "15.3.3",
     "nprogress": "^0.2.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-icons": "^5.5.0",
+    "react-intersection-observer": "^9.16.0",
     "react-player": "^2.16.0",
     "zustand": "^5.0.5"
   },

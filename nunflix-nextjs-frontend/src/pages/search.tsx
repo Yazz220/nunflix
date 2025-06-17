@@ -7,9 +7,10 @@ import SkeletonCard from '@/components/SkeletonCard/SkeletonCard'; // Import Ske
 import styles from '@/styles/ExplorePage.module.css';
 
 // Interface for the items in the search results (mini-card schema from research)
-interface SearchResultItem extends Omit<ContentCardProps, 'media_type'> {
+interface SearchResultItem extends Omit<ContentCardProps, 'media_type' | 'poster_path'> {
   media_type: 'movie' | 'tv' | 'person'; // Search can return people too
   known_for_department?: string; // For person type
+  poster_path: string | null;
 }
 
 interface SearchAPIResponse {
@@ -89,7 +90,7 @@ const SearchPage: NextPage<SearchPageProps> = ({ searchResults, query, error }) 
               return (
                 <div key={item.id} className={styles.personCardPlaceholder}>
                   <p>{item.title} ({item.known_for_department})</p>
-                  {item.poster && <img src={`https://image.tmdb.org/t/p/w185${item.poster}`} alt={item.title} width="100" />}
+                  {item.poster_path && <img src={`https://image.tmdb.org/t/p/w185${item.poster_path}`} alt={item.title} width="100" />}
                 </div>
               );
             }
@@ -98,7 +99,7 @@ const SearchPage: NextPage<SearchPageProps> = ({ searchResults, query, error }) 
                 key={item.id}
                 id={item.id}
                 title={item.title}
-                poster={item.poster || ''}
+                poster_path={item.poster_path}
                 media_type={item.media_type as 'movie' | 'tv'} // Cast because ContentCard expects movie/tv
                 release_date={item.release_date}
                 // vote_average and other props might not be in search/multi results,
@@ -121,12 +122,11 @@ export const getServerSideProps: GetServerSideProps<SearchPageProps> = async (co
   }
 
   try {
-    const { data, error } = await supabase
-      .from('titles')
-      .select('*')
-      .textSearch('title', `'${query}'`);
-
-    if (error) throw error;
+    const res = await fetch(`http://localhost:3000/api/v1/search?q=${query}`);
+    if (!res.ok) {
+      throw new Error('Failed to fetch search results');
+    }
+    const data = await res.json();
 
     const searchResults: SearchAPIResponse = {
       page: 1,

@@ -75,7 +75,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
 
   const playerRef = useRef<any>(null);
   const [titleDetails, setTitleDetails] = useState<TitleDetails | null>(initialTitleDetails);
-  const [selectedSource, setSelectedSource] = useState<StreamSource | null>(initialTitleDetails?.stream_sources?.[0] || null);
+  const [selectedSource, setSelectedSource] = useState<StreamSource | null>(null);
   const [currentSeasonDetails, setCurrentSeasonDetails] = useState<SeasonDetails | null>(initialSeasonDetails || null);
   const [selectedSeasonNumber, setSelectedSeasonNumber] = useState<number>(initialSeasonDetails?.season_number || 1);
   const [selectedEpisodeNumber, setSelectedEpisodeNumber] = useState<number>(1);
@@ -93,6 +93,29 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
       setHasWindow(true);
     }
   }, []);
+
+  useEffect(() => {
+    const fetchStreamSources = async () => {
+      if (id && type) {
+        try {
+          const response = await fetch(`/api/stream/${id}?type=${type}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch stream sources');
+          }
+          const data = await response.json();
+          if (data.stream_sources && data.stream_sources.length > 0) {
+            setTitleDetails(prev => prev ? { ...prev, stream_sources: data.stream_sources } : null);
+            setSelectedSource(data.stream_sources[0]);
+          }
+        } catch (error) {
+          console.error('Error fetching stream sources:', error);
+          setGlobalError('Failed to fetch stream sources.');
+        }
+      }
+    };
+
+    fetchStreamSources();
+  }, [id, type, setGlobalError]);
 
   // Fetch episodes when selectedSeasonNumber or tvId changes
   useEffect(() => {
@@ -127,7 +150,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
       };
       fetchSeasonDetails();
     }
-  }, [tvId, selectedSeasonNumber, type, isAuthenticated, token]);
+  }, [tvId, selectedSeasonNumber, type, isAuthenticated, token, titleDetails?.seasons, selectedEpisodeNumber, setGlobalError]);
 
 
   const getEpisodeDuration = (): number | undefined => {
@@ -140,7 +163,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
 
   const getDuration = (): number | undefined => {
     if (playerRef.current) {
-      const duration = playerRef.current.getDuration();
+      const duration = playerRef.current.duration;
       if (duration && duration > 0) return duration;
     }
     if (titleDetails) {
@@ -154,7 +177,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
     return undefined;
   };
 
-  const handleProgress = (progress: { playedSeconds: number; loadedSeconds: number }) => {
+  const handleProgress = () => {
     if (progressUpdateRef.current) {
       clearTimeout(progressUpdateRef.current);
     }
@@ -163,7 +186,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
       const updateProgress = useAuthStore.getState().updateProgress;
       if (!isAuthenticated || !id || !type || !playerRef.current) return;
 
-      const position = Math.round(progress.playedSeconds);
+      const position = Math.round(playerRef.current.currentTime);
       const duration = getDuration();
 
       if (typeof duration === 'undefined' || duration <= 0 || position <= 0) return;
@@ -303,7 +326,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
                   width="100%"
                   height="100%"
                   onCanPlay={handlePlayerReady}
-                  onTimeUpdate={(e) => handleProgress({ playedSeconds: e.currentTarget.currentTime, loadedSeconds: e.currentTarget.duration })}
+                  onTimeUpdate={handleProgress}
                   onError={handlePlayerError}
                 />
               </Suspense>
