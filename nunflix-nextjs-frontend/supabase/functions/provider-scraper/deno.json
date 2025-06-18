@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "std/": "https://deno.land/std@0.177.0/",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2",
+    "sentry": "https://deno.land/x/sentry@7.86.0/index.mjs",
+    "dom": "https://deno.land/x/deno_dom/deno-dom-wasm.ts"
+  }
+}
