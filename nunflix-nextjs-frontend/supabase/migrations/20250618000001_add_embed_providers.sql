@@ -11,4 +11,5 @@ VALUES
   ('https://vidcloud9.com/embed/', 'https://vidcloud9.com/embed/{fileId}', 'scrape', true),
   ('https://www.mp4upload.com/embed-', 'https://www.mp4upload.com/embed-{fileId}.html', 'scrape', true),
   ('https://sbplay2.com/e/', 'https://sbplay2.com/e/{fileId}', 'scrape', true),
-  ('https://www.rapidvideo.com/e/', 'https://www.rapidvideo.com/e/{fileId}', 'scrape', true);
+  ('https://www.rapidvideo.com/e/', 'https://www.rapidvideo.com/e/{fileId}', 'scrape', true)
+ON CONFLICT (base_url) DO NOTHING;
