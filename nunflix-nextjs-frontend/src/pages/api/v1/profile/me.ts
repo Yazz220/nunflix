@@ -16,8 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'GET') {
     const { data, error } = await supabase
-      .from('users')
-      .select('id, email, raw_user_meta_data')
+      .from('profiles')
+      .select('id, avatar_url, display_name, bio')
       .eq('id', user.id)
       .single();
 
@@ -25,37 +25,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ error: error.message });
     }
 
-    const profile = {
-      id: data.id,
-      email: data.email,
-      avatar_url: data.raw_user_meta_data?.avatar_url,
-      display_name: data.raw_user_meta_data?.display_name,
-      bio: data.raw_user_meta_data?.bio,
-    };
-
-    return res.status(200).json(profile);
+    return res.status(200).json(data);
   }
 
   if (req.method === 'PUT') {
     const { avatar_url, display_name, bio } = req.body;
 
-    const { data, error } = await supabase.auth.updateUser({
-      data: { avatar_url, display_name, bio },
-    });
+    const { data, error } = await supabase
+      .from('profiles')
+      .upsert({ id: user.id, avatar_url, display_name, bio })
+      .select()
+      .single();
 
     if (error) {
       return res.status(500).json({ error: error.message });
     }
 
-    const updatedProfile = {
-      id: data.user.id,
-      email: data.user.email,
-      avatar_url: data.user.user_metadata.avatar_url,
-      display_name: data.user.user_metadata.display_name,
-      bio: data.user.user_metadata.bio,
-    };
-
-    return res.status(200).json(updatedProfile);
+    return res.status(200).json(data);
   }
 
   res.setHeader('Allow', ['GET', 'PUT']);

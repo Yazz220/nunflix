@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '@/stores/authStore';
 import styles from '@/styles/ProfilePage.module.css';
 
 const ProfilePage = () => {
-  const { user, fetchUser } = useAuthStore();
-  const [displayName, setDisplayName] = useState(user?.display_name || '');
-  const [bio, setBio] = useState(user?.bio || '');
-  const [avatarUrl, setAvatarUrl] = useState(user?.avatar_url || '');
+  const { user, profile, fetchProfile } = useAuthStore();
+  const [displayName, setDisplayName] = useState(profile?.display_name || '');
+  const [bio, setBio] = useState(profile?.bio || '');
+  const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || '');
+
+  useEffect(() => {
+    if (!profile) {
+      fetchProfile();
+    }
+  }, [profile, fetchProfile]);
   const [loading, setLoading] = useState(false);
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
@@ -31,7 +37,7 @@ const ProfilePage = () => {
         throw new Error(errorData.error || 'Failed to update profile');
       }
 
-      await fetchUser();
+      await fetchProfile();
       alert('Profile updated successfully!');
     } catch (error: any) {
       alert(error.message);

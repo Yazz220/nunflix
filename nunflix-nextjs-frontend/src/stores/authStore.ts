@@ -31,17 +31,26 @@ interface User {
   continue_watching?: ContinueWatchingItem[]; // Renamed from 'continue' for clarity
 }
 
+interface Profile {
+  id: string;
+  avatar_url?: string;
+  display_name?: string;
+  bio?: string;
+}
+
 interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  profile: Profile | null;
   favorites: FavoriteItem[];
   watchlist: FavoriteItem[];
-  continueWatching: ContinueWatchingItem[]; // Added
+  continueWatching: ContinueWatchingItem[];
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   fetchUser: () => Promise<void>;
+  fetchProfile: () => Promise<void>;
   setFavorites: (items: FavoriteItem[]) => void;
   addFavorite: (item: FavoriteItem) => void;
   removeFavorite: (itemId: number) => void;
@@ -57,9 +66,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: null,
   isAuthenticated: false,
+  profile: null,
   favorites: [],
   watchlist: [],
-  continueWatching: [], // Initialize continueWatching
+  continueWatching: [],
   login: async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -113,6 +123,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     } else {
       set({ user: null, isAuthenticated: false, favorites: [], watchlist: [], continueWatching: [] });
+    }
+  },
+  fetchProfile: async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, avatar_url, display_name, bio')
+        .eq('id', user.id)
+        .single();
+      if (error) {
+        console.error('Error fetching profile:', error);
+      } else {
+        set({ profile: data });
+      }
     }
   },
   setFavorites: (items) => set({ favorites: items }),
