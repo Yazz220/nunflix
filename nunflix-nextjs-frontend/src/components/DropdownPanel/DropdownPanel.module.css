@@ -1,65 +1,46 @@
-.dropdownPanel {
-  position: absolute;
-  top: 100%; /* Position below the nav item */
-  left: 0;
-  background-color: #181818; /* Dark background like screenshots */
-  border: 1px solid #282828;
-  border-top: none; /* No top border as it connects to header */
-  border-radius: 0 0 4px 4px; /* Rounded bottom corners */
-  padding: 20px;
-  z-index: 110; /* Above navbar, below burger menu overlay if active */
-  min-width: 400px; /* Minimum width, adjust as needed */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(10px);
-  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out, visibility 0.2s ease-in-out;
+.panel {
+  width: 100%;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  background-color: #1a1a1a;
 }
 
-/* This class will be added dynamically in Header.tsx when activeDropdown matches */
-/* We'll handle this logic in Header.module.css or directly in Header.tsx for simplicity */
-/* For now, this is a placeholder if we decide to toggle via CSS classes on DropdownPanel itself */
-.dropdownPanel.open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.dropdownTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  background-color: #222;
+  border: none;
+  width: 100%;
+  text-align: left;
   color: #fff;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #333;
+}
+
+.titleContainer {
   display: flex;
   align-items: center;
 }
 
-/* Placeholder for icon styling if we add them later */
-.dropdownTitle svg {
-  margin-right: 8px;
+.icon {
+  margin-right: 0.75rem;
   font-size: 1.2rem;
 }
 
-.dropdownGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Two columns as per screenshots */
-  gap: 10px 15px; /* Row and column gap */
+.title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
-.dropdownItem {
-  display: block;
-  color: #b3b3b3;
-  padding: 8px 0; /* Padding for each item */
-  text-decoration: none;
-  font-size: 0.9rem;
-  border-radius: 3px;
-  transition: color 0.2s ease, background-color 0.2s ease;
-  cursor: pointer;
+.chevron {
+  font-size: 1rem;
 }
 
-.dropdownItem:hover {
-  color: #fff;
-  /* background-color: #333; Optional: hover background for items */
+.content {
+  padding: 1rem;
+  background-color: #141414;
 }

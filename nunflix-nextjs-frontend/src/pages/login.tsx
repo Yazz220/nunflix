@@ -82,7 +82,7 @@ const LoginPage: NextPage = () => {
           </button>
           <p className={styles.switchFormText}>
             Don't have an account?{' '}
-            <Link href="/register" className={styles.switchFormLink}>Register here</Link>
+            <Link href="/register" legacyBehavior><a className={styles.switchFormLink}>Register here</a></Link>
           </p>
         </form>
       </main>

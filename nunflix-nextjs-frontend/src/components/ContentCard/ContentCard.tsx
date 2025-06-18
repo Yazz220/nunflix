@@ -129,10 +129,11 @@ const ContentCard: React.FC<ContentCardProps> = ({
   const imageUrl = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : 'https://placehold.co/200x300.png';
 
   return (
-    <div className={`${styles.card} ${isLarge ? styles.cardLarge : ''}`}>
-      <div className={styles.actionButtonsWrapper}> {/* Wrapper for action buttons */}
-        <button
-          className={`${styles.actionButton} ${styles.favoriteButton} ${isFavorited ? styles.favoriteButtonActive : ''}`}
+    <Link href={`/title/${numericId}?type=${media_type || 'movie'}`} legacyBehavior>
+      <a className={`${styles.card} ${isLarge ? styles.cardLarge : ''}`}>
+        <div className={styles.actionButtonsWrapper}> {/* Wrapper for action buttons */}
+          <button
+            className={`${styles.actionButton} ${styles.favoriteButton} ${isFavorited ? styles.favoriteButtonActive : ''}`}
           onClick={(e) => handleToggle(e, 'favorite')}
           disabled={isLoadingFavorite || !isAuthenticated}
           aria-label={isFavorited ? "Remove from Favorites" : "Add to Favorites"}
@@ -150,45 +151,44 @@ const ContentCard: React.FC<ContentCardProps> = ({
           {/* Using a simple plus/check for now, could be icons */}
           {isOnWatchlist ? '✓' : '+'}
         </button>
-      </div>
-      <Link href={`/title/${numericId}?type=${media_type}`}>
+        </div>
         <div className={styles.cardClickableArea}>
             <div className={styles.posterWrapper}>
               <Image
                 src={imageUrl}
-                alt={title || 'Content poster'}
-                fill
-                sizes="(max-width: 768px) 33vw, (max-width: 1200px) 20vw, 15vw"
-                style={{ objectFit: 'cover' }}
-                className={styles.posterImage}
-                unoptimized={!poster_path}
-                priority={false}
-              />
-              {progress !== undefined && progress > 0 && progress < 1 && (
-                <div className={styles.progressBarContainer}>
-                  <div
-                    className={styles.progressBarFill}
-                    style={{ width: `${progress * 100}%` }}
-                  />
-                </div>
-              )}
-            </div>
-            <div className={styles.info}>
-              <div className={styles.titleWrapper}>
-                <h3 className={styles.title}>{title}</h3>
+              alt={title || 'Content poster'}
+              fill
+              sizes="(max-width: 768px) 33vw, (max-width: 1200px) 20vw, 15vw"
+              style={{ objectFit: 'cover' }}
+              className={styles.posterImage}
+              unoptimized={!poster_path}
+              priority={false}
+            />
+            {progress !== undefined && progress > 0 && progress < 1 && (
+              <div className={styles.progressBarContainer}>
+                <div
+                  className={styles.progressBarFill}
+                  style={{ width: `${progress * 100}%` }}
+                />
               </div>
-              <div className={styles.meta}>
-                <span className={styles.year}>{year}</span>
-                {vote_average && vote_average > 0 ? (
-                  <span className={styles.rating}>
-                    ⭐ {vote_average.toFixed(1)}
-                  </span>
-                ) : null}
-              </div>
+            )}
+          </div>
+          <div className={styles.info}>
+            <div className={styles.titleWrapper}>
+              <h3 className={styles.title}>{title}</h3>
             </div>
+            <div className={styles.meta}>
+              <span className={styles.year}>{year}</span>
+              {vote_average && vote_average > 0 ? (
+                <span className={styles.rating}>
+                  ⭐ {vote_average.toFixed(1)}
+                </span>
+              ) : null}
+            </div>
+          </div>
         </div>
-      </Link>
-    </div>
+      </a>
+    </Link>
   );
 };
 

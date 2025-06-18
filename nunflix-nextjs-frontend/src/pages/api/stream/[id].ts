@@ -24,7 +24,7 @@ export default async function handler(
   try {
     const { data: providers, error } = await supabase
       .from('embed_providers')
-      .select('base_url')
+      .select('base_url, pattern, type')
       .eq('is_active', true);
 
     if (error) {
@@ -40,24 +40,30 @@ export default async function handler(
     const streamSources = [];
 
     for (const provider of shuffledProviders) {
-      // Note: This logic assumes a consistent URL structure.
-      // Vidsrc.to uses /embed/{type}/{id}, Multiembed uses ?video_id={id}
-      // A more robust solution might store the URL format in the DB.
-      const url = provider.base_url.includes('?')
-        ? `${provider.base_url}${id}`
-        : `${provider.base_url}/${type}/${id}`;
+      let embedUrl: string;
+      if (provider.type === 'tmdb') {
+        embedUrl = provider.pattern
+          .replace('{type}', type)
+          .replace('{id}', id);
+      } else {
+        // Placeholder for scrape-based providers
+        // const fileId = await getScrapedFileId(provider.base_url, id);
+        // embedUrl = provider.pattern.replace('{fileId}', fileId);
+        // For now, we'll just use the base url and id
+        embedUrl = `${provider.base_url}${id}`;
+      }
 
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 3000); // 3-second timeout
 
-        const response = await fetch(url, { method: 'HEAD', signal: controller.signal });
+        const response = await fetch(embedUrl, { method: 'HEAD', signal: controller.signal });
         clearTimeout(timeoutId);
 
         if (response.ok) {
           streamSources.push({
             name: new URL(provider.base_url).hostname, // Use hostname as name
-            url: url,
+            url: embedUrl,
           });
           // Return the first N working mirrors
           if (streamSources.length >= 2) {

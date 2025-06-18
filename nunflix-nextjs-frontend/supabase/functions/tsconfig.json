@@ -1,23 +1,10 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "lib": ["esnext", "dom"],
+    "lib": ["dom", "es2020"],
     "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "https://esm.sh/react@18.2.0",
-    "paths": {
-      "@/*": ["../../src/*"],
-      "lib/*": ["./_lib/*"]
-    }
+    "module": "esnext",
+    "target": "es2020",
+    "moduleResolution": "node"
   },
   "include": ["./**/*.ts"],
   "exclude": ["node_modules"]

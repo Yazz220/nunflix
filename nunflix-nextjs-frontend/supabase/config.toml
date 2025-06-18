@@ -328,7 +328,7 @@ entrypoint = "./functions/cache-refresh/index.ts"
 [functions.fallback-scraper]
 enabled = true
 verify_jwt = true
-import_map = "./functions/fallback-scraper/deno.json"
+import_map = "./functions/import_map.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/fallback-scraper/index.ts"

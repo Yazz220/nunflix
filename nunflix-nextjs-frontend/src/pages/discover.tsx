@@ -138,7 +138,9 @@ const DiscoverPage: NextPage = () => {
                   href={`/title/${item.id}?type=${mediaType}`}
                   key={item.id}
                   legacyBehavior>
-                  <ContentCard {...item} media_type={mediaType as 'movie' | 'tv'} />
+                  <a>
+                    <ContentCard {...item} media_type={mediaType as 'movie' | 'tv'} />
+                  </a>
                 </Link>
               ))}
             </React.Fragment>

@@ -7,6 +7,9 @@ import React, { useEffect } from "react";
 import Router from "next/router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -29,13 +32,13 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <React.Fragment>
+    <QueryClientProvider client={queryClient}>
       <Header />
       <main style={{ flex: '1 0 auto', display: 'flex', flexDirection: 'column' }}>
         <Component {...pageProps} />
       </main>
       <Footer />
       <GlobalErrorDisplay /> {/* Add the error display component here */}
-    </React.Fragment>
+    </QueryClientProvider>
   );
 }

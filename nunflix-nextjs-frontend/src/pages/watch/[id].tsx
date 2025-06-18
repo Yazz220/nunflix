@@ -1,8 +1,9 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useRef, Suspense } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
+import type ReactPlayer from 'react-player';
 import { supabase } from '@/lib/supabaseClient';
 import { useAuthStore } from '@/stores/authStore';
 import { useUIStore } from '@/stores/uiStore';
@@ -12,8 +13,9 @@ import Image from 'next/image';
 import { parseTitleDetails } from '@/lib/utils';
 import ServerSelector from '@/components/ServerSelector/ServerSelector';
 import EpisodeList from '@/components/EpisodeList/EpisodeList';
-import { FaCog, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaCog, FaChevronLeft, FaChevronRight, FaArrowLeft, FaLightbulb, FaUser, FaExternalLinkAlt, FaInfoCircle, FaUsers, FaExpand, FaList } from 'react-icons/fa';
 
+const ReactPlayerComponent = dynamic(() => import('react-player/lazy').then(mod => mod.default), { ssr: false });
 
 interface StreamSource {
   label: string;
@@ -57,6 +59,7 @@ interface TitleDetails {
   number_of_seasons?: number;
   overview: string | null;
   backdrop_path: string | null; // Added for player background
+  release_date?: string;
 }
 
 interface WatchPageProps {
@@ -73,7 +76,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
   const { token, isAuthenticated } = useAuthStore();
   const setGlobalError = useUIStore((state) => state.setError);
 
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<ReactPlayer>(null);
   const [titleDetails, setTitleDetails] = useState<TitleDetails | null>(initialTitleDetails);
   const [selectedSource, setSelectedSource] = useState<StreamSource | null>(null);
   const [currentSeasonDetails, setCurrentSeasonDetails] = useState<SeasonDetails | null>(initialSeasonDetails || null);
@@ -85,7 +88,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [hasWindow, setHasWindow] = useState(false);
   const progressUpdateRef = useRef<NodeJS.Timeout | null>(null);
-  const [showServerSelector, setShowServerSelector] = useState(false);
   const [antiSpoilerMode, setAntiSpoilerMode] = useState(false);
 
   useEffect(() => {
@@ -163,7 +165,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
 
   const getDuration = (): number | undefined => {
     if (playerRef.current) {
-      const duration = playerRef.current.duration;
+      const duration = playerRef.current.getDuration();
       if (duration && duration > 0) return duration;
     }
     if (titleDetails) {
@@ -186,7 +188,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
       const updateProgress = useAuthStore.getState().updateProgress;
       if (!isAuthenticated || !id || !type || !playerRef.current) return;
 
-      const position = Math.round(playerRef.current.currentTime);
+      const position = Math.round(playerRef.current.getCurrentTime());
       const duration = getDuration();
 
       if (typeof duration === 'undefined' || duration <= 0 || position <= 0) return;
@@ -288,7 +290,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
   const totalSeasons = titleDetails?.seasons?.length || 0;
 
   if (error) {
-    return <div className={styles.errorContainer}><p>Error: {error}</p><Link href="/">Go back home</Link></div>;
+    return <div className={styles.errorContainer}><p>Error: {error}</p><Link href="/" legacyBehavior><a>Go back home</a></Link></div>;
   }
 
   if (!titleDetails) {
@@ -307,97 +309,102 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
 
 
   return (
-    <div className={styles.watchPageContainer}>
-      <Head>
-        <title>Watch {displayTitle} - Nunflix</title>
-        <meta name="description" content={displayOverview || 'Watch movies and TV shows on Nunflix'} />
-      </Head>
-
-      <div className={styles.mainContent}>
-        <div className={styles.videoPlayerContainer}>
-          <div className={styles.videoPlayerWrapper}>
+    <>
+      <header className={styles.watchHeader}>
+        <button onClick={() => router.back()} className={styles.backButton}>
+          <FaArrowLeft />
+        </button>
+        <h1 className={styles.title}>{displayTitle}</h1>
+        <div className={styles.actionIcons}>
+          <button><FaInfoCircle /></button>
+          <button><FaUsers /></button>
+          <button><FaExpand /></button>
+          <button><FaList /></button>
+        </div>
+      </header>
+      <div className={styles.watchContainer}>
+        <div className={styles.playerColumn}>
+          <div className={styles.playerWrapper}>
             {hasWindow && selectedSource ? (
-              <Suspense fallback={<div>Loading player...</div>}>
-                <video
-                  ref={playerRef}
-                  src={getPlayerUrl()}
-                  controls
-                  autoPlay
-                  width="100%"
-                  height="100%"
-                  onCanPlay={handlePlayerReady}
-                  onTimeUpdate={handleProgress}
-                  onError={handlePlayerError}
-                />
-              </Suspense>
+              <ReactPlayerComponent
+                ref={playerRef}
+                url={getPlayerUrl()}
+                controls
+                playing
+                width="100%"
+                height="100%"
+                onReady={handlePlayerReady}
+                onProgress={handleProgress}
+                onError={handlePlayerError}
+              />
             ) : (
               <div className={styles.playerPlaceholder}>Select a server to start watching.</div>
-            )}
-          </div>
-          <div className={styles.titleDetails}>
-            <h1>{displayTitle}</h1>
-            <p className={styles.overview}>{displayOverview}</p>
-            {/* Action Buttons: Add to Queue, Save, Share - Placeholder for now */}
-            <div className={styles.actionButtons}>
-              <button>Add to Queue</button>
-              <button>Save</button>
-              <button>Share</button>
-            </div>
-          </div>
-        </div>
-        <div className={styles.sidebar}>
-          <div className={styles.serverSelectorWrapper}>
-            <button className={styles.serverSelectorButton} onClick={() => setShowServerSelector(!showServerSelector)}>
-              <FaCog /> Change Server: {selectedSource?.label || 'N/A'}
-            </button>
-            {showServerSelector && (
-              <div className={styles.serverList}>
-                <ServerSelector
-                  sources={titleDetails.stream_sources || []}
-                  selectedSource={selectedSource}
-                  onSelectSource={handleSourceChange}
-                />
-              </div>
             )}
           </div>
 
           {isTvShow && (
             <div className={styles.episodeNavigation}>
-              <div className={styles.seasonNavigator}>
-                <button onClick={() => handleSeasonChange(selectedSeasonNumber - 1)} disabled={selectedSeasonNumber <= 1}>
-                  <FaChevronLeft />
-                </button>
-                <span>Season {selectedSeasonNumber} of {totalSeasons}</span>
-                <button onClick={() => handleSeasonChange(selectedSeasonNumber + 1)} disabled={selectedSeasonNumber >= totalSeasons}>
-                  <FaChevronRight />
-                </button>
-              </div>
-
-              <div className={styles.antiSpoilerToggle}>
-                <input
-                  type="checkbox"
-                  id="antiSpoilerMode"
-                  checked={antiSpoilerMode}
-                  onChange={() => setAntiSpoilerMode(!antiSpoilerMode)}
-                />
-                <label htmlFor="antiSpoilerMode">Anti-Spoiler Mode</label>
-              </div>
-
-              {isLoadingSeason ? (
-                <div>Loading episodes...</div>
-              ) : (
-                <EpisodeList
-                  episodes={currentSeasonDetails?.episodes || []}
-                  selectedEpisode={selectedEpisodeNumber}
-                  onSelectEpisode={handleEpisodeChange}
-                  antiSpoilerMode={antiSpoilerMode}
-                />
-              )}
+              <button onClick={goToPreviousEpisode} disabled={!hasPreviousEpisode}>
+                <FaChevronLeft /> Previous
+              </button>
+              <span>{`S${selectedSeasonNumber} E${selectedEpisodeNumber}`}</span>
+              <button onClick={goToNextEpisode} disabled={!hasNextEpisode}>
+                Next <FaChevronRight />
+              </button>
             </div>
+          )}
+
+          <div className={styles.metadataStrip}>
+            <div className={styles.metadataHeader}>
+              <Image src={titleDetails.backdrop_path || '/placeholder-poster.png'} alt={titleDetails.title} width={100} height={150} className={styles.posterImage} />
+              <div className={styles.metadataInfo}>
+                <h2>{titleDetails.title}</h2>
+                <p>{titleDetails.release_date?.substring(0, 4)} • {titleDetails.runtime} min</p>
+              </div>
+            </div>
+            <div className={styles.metadataActions}>
+              <button>Add to Queue</button>
+              <button>Save</button>
+              <button>Share</button>
+            </div>
+          </div>
+          <div className={styles.discussionSection}>
+            <div className={styles.discussionHeader}>
+              <h2>Discussion</h2>
+              <div className={styles.discussionSort}>
+                <button className={styles.active}>Newest</button>
+                <button>Trending</button>
+                <button>Oldest</button>
+              </div>
+            </div>
+            <div className={styles.commentsContainer}>
+              <p>Sign in to view comments</p>
+            </div>
+          </div>
+        </div>
+        <div className={styles.serversColumn}>
+          {isTvShow ? (
+            <EpisodeList
+              seasons={titleDetails.seasons || []}
+              selectedSeason={selectedSeasonNumber}
+              selectedEpisode={selectedEpisodeNumber}
+              onSeasonChange={handleSeasonChange}
+              onEpisodeChange={handleEpisodeChange}
+              episodes={currentSeasonDetails?.episodes || []}
+              isLoading={isLoadingSeason}
+              antiSpoilerMode={antiSpoilerMode}
+              onToggleAntiSpoiler={() => setAntiSpoilerMode(!antiSpoilerMode)}
+            />
+          ) : (
+            <ServerSelector
+              sources={titleDetails.stream_sources || []}
+              selectedSource={selectedSource}
+              onSourceChange={handleSourceChange}
+            />
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

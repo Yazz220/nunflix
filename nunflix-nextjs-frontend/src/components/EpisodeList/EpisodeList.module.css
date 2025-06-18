@@ -1,120 +1,100 @@
-.episodeList {
-  background-color: var(--color-background-medium);
+.panel {
+  background-color: #181818;
+  border-radius: 8px;
   padding: 1rem;
-  border-radius: 4px;
-  max-height: calc(100vh - 300px);
-  overflow-y: auto;
-  border: 1px solid var(--color-border);
+  color: #fff;
 }
 
-.episodeList h3 {
-  margin-top: 0;
+.seasonSelector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  background-color: #222;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.seasonSelector button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
   font-size: 1.2rem;
-  color: var(--color-text-primary);
+}
+
+.seasonSelector button:disabled {
+  color: #555;
+  cursor: not-allowed;
+}
+
+.antiSpoiler {
   margin-bottom: 1rem;
 }
 
-.episodeList ul {
+.antiSpoiler label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+}
+
+.episodeList {
   list-style: none;
   padding: 0;
   margin: 0;
+  max-height: 500px;
+  overflow-y: auto;
 }
 
-.episodeList li {
+.episodeItem {
   display: flex;
+  gap: 1rem;
   padding: 0.75rem;
   cursor: pointer;
   border-radius: 4px;
-  margin-bottom: 0.75rem;
-  background-color: var(--color-background-light);
-  transition: background-color 0.2s ease;
-  align-items: center;
+  transition: background-color 0.2s;
 }
 
-.episodeList li:last-child {
-  margin-bottom: 0;
+.episodeItem:hover {
+  background-color: #2a2a2a;
 }
 
-.episodeList li:hover {
-  background-color: var(--color-background-medium);
+.episodeItem.active {
+  background-color: #e50914;
 }
 
-.episodeList li.active {
-  background-color: var(--color-accent-red);
-  color: var(--color-text-primary);
-}
-
-.episodeThumbnail {
-  position: relative;
-  width: 120px;
-  height: 67.5px;
-  margin-right: 1rem;
+.thumbnail {
   flex-shrink: 0;
-  background-color: var(--color-border);
-  border-radius: 2px;
-  overflow: hidden;
 }
 
-.placeholderThumbnail {
-  width: 100%;
-  height: 100%;
-  background-color: var(--color-border-dark);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--color-text-secondary);
-  font-size: 0.8rem;
+.placeholder {
+  width: 120px;
+  height: 68px;
+  background-color: #333;
+  border-radius: 4px;
 }
 
-.episodeThumbnail img {
-  object-fit: cover;
+.image {
+  border-radius: 4px;
 }
 
-.episodeNumber {
-  position: absolute;
-  bottom: 5px;
-  left: 5px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: var(--color-text-primary);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.episodeInfo {
-  flex: 1;
+.info {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.episodeTitle {
-  font-weight: 600;
-  margin: 0 0 0.25rem 0;
-  font-size: 0.95rem;
-  color: var(--color-text-primary);
+.episodeNumber {
+  font-weight: bold;
 }
 
-.episodeRuntime {
-  font-size: 0.8rem;
-  color: var(--color-text-secondary);
-  margin: 0 0 0.5rem 0;
-}
-
-.episodeOverview {
-  font-size: 0.85rem;
-  color: var(--color-text-secondary);
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.spoilerHidden {
-  color: var(--color-text-secondary);
-  font-style: italic;
+.episodeName {
+  margin: 0;
   font-size: 0.9rem;
 }

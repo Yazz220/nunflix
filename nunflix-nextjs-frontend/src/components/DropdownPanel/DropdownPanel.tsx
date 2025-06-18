@@ -1,45 +1,37 @@
-import React from 'react';
-import Link from 'next/link';
+import React, { useState, ReactNode } from 'react';
 import styles from './DropdownPanel.module.css';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
-export interface DropdownLink {
-  name: string;
-  href: string;
-}
-
-interface DropdownPanelProps {
+export interface DropdownPanelProps {
   title: string;
-  items: DropdownLink[];
-  isOpen?: boolean; // Added isOpen prop
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
-  onLinkClick?: () => void; // To close dropdown when a link is clicked
+  icon?: ReactNode;
+  children: ReactNode;
+  startOpen?: boolean;
 }
 
-const DropdownPanel: React.FC<DropdownPanelProps> = ({
-  title,
-  items,
-  isOpen, // Destructure isOpen
-  onMouseEnter,
-  onMouseLeave,
-  onLinkClick
-}) => {
+const DropdownPanel: React.FC<DropdownPanelProps> = ({ title, icon, children, startOpen = false }) => {
+  const [isOpen, setIsOpen] = useState(startOpen);
+
+  const toggleOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <div
-      className={`${styles.dropdownPanel} ${isOpen ? styles.open : ''}`} // Conditionally apply open class
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
-      <h3 className={styles.dropdownTitle}>{title}</h3>
-      <div className={styles.dropdownGrid}>
-        {items.map((item) => (
-          <Link key={item.name} href={item.href} legacyBehavior>
-            <span className={styles.dropdownItem} onClick={onLinkClick}>
-              {item.name}
-            </span>
-          </Link>
-        ))}
-      </div>
+    <div className={styles.panel}>
+      <button className={styles.header} onClick={toggleOpen}>
+        <div className={styles.titleContainer}>
+          {icon && <span className={styles.icon}>{icon}</span>}
+          <h3 className={styles.title}>{title}</h3>
+        </div>
+        <span className={styles.chevron}>
+          {isOpen ? <FaChevronUp /> : <FaChevronDown />}
+        </span>
+      </button>
+      {isOpen && (
+        <div className={styles.content}>
+          {children}
+        </div>
+      )}
     </div>
   );
 };

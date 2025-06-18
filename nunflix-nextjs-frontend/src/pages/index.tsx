@@ -7,14 +7,8 @@ import HeroBanner from '@/components/HeroBanner/HeroBanner';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner'; // Import the spinner
 
 // Expected structure from /api/v1/frontpage
-// ContentCardProps now includes overview and backdrop_path
 interface FrontPageData {
-  trending: ContentCardProps[]; // Can use ContentCardProps directly
-  popular_movies: ContentCardProps[];
-  popular_tv: ContentCardProps[];
-  top_rated: ContentCardProps[];
-  titles: ContentCardProps[]; // Add titles array to the interface
-  // top_rated_tv?: ContentCardProps[]; // If we add this to backend
+  [key: string]: ContentCardProps[];
 }
 
 interface HomePageProps {
@@ -28,48 +22,28 @@ const HomePage: NextPage<HomePageProps> = ({ frontPageData, error }) => {
   }
 
   if (!frontPageData) {
-    // If data is null and there's no error, it implies loading (e.g. initial state before SSR resolves)
-    // Or if client-side fetching were implemented and in progress.
     return <LoadingSpinner fullPage />;
   }
 
   const heroItem = frontPageData.trending && frontPageData.trending.length > 0 ? frontPageData.trending[0] : null;
 
-  // Group titles by watch provider
-  const groupedByProvider: { [key: string]: ContentCardProps[] } = {};
-
-  frontPageData.titles.forEach(item => {
-    if (item.watch_providers) {
-      const providers = typeof item.watch_providers === 'string' ? JSON.parse(item.watch_providers) : item.watch_providers;
-      if (providers && providers.length > 0) {
-        providers.forEach((provider: any) => {
-          if (!groupedByProvider[provider.provider_name]) {
-            groupedByProvider[provider.provider_name] = [];
-          }
-          groupedByProvider[provider.provider_name].push(item);
-        });
-      }
-    }
-  });
-
-  // Define a whitelist of popular providers to display.
-  const POPULAR_PROVIDERS = new Set([
-    'Netflix',
-    'Amazon Prime Video',
-    'Hulu',
-    'Max',
-    'HBO Max', // Included for older data, will be displayed as Max
-    'Disney Plus',
-    'Apple TV+',
-    'Paramount Plus',
-    'Peacock',
-    'Starz'
-  ]);
-
-  // Filter and sort the providers to be displayed.
-  const sortedProviderNames = Object.keys(groupedByProvider)
-    .filter(name => POPULAR_PROVIDERS.has(name))
-    .sort();
+  const SECTIONS = [
+    { key: 'trending', title: 'Trending Now', isLargeRow: true },
+    { key: 'must_watch', title: 'Must Watch' },
+    { key: 'apple_tv', title: 'Apple TV+', logoUrl: 'https://image.tmdb.org/t/p/w92/9zZzJeMC2iYnFVc2aDP1XGgIqza.png' },
+    { key: 'starz', title: 'Starz', logoUrl: 'https://image.tmdb.org/t/p/w92/wZkKY6aL1kK28wA5S7N0wP3f8aA.png' },
+    { key: 'dc', title: 'DC', logoUrl: 'https://image.tmdb.org/t/p/w92/4P82uYnB9e7aP3D2a2H2tIuM3d.png' },
+    { key: 'prime_video', title: 'Prime Video', logoUrl: 'https://image.tmdb.org/t/p/w92/6oE0ab60s3sA529iZzB02g3b6g.png' },
+    { key: 'hbo', title: 'HBO', logoUrl: 'https://image.tmdb.org/t/p/w92/aS2zvP4sfv1x3bFFoRiw8Pa7V6a.png' },
+    { key: 'cartoon_network', title: 'Cartoon Network', logoUrl: 'https://image.tmdb.org/t/p/w92/fSpP1N22h4D7qr82x1jJ3e1aY5A.png' },
+    { key: 'showtime', title: 'Showtime', logoUrl: 'https://image.tmdb.org/t/p/w92/28gJbiGj33c5H13gD5i8aA6jXl.png' },
+    { key: 'hulu', title: 'Hulu', logoUrl: 'https://image.tmdb.org/t/p/w92/z5VFC2gccx6f4FfD7fe7dphv7g.png' },
+    { key: 'disney', title: 'Walt Disney Pictures', logoUrl: 'https://image.tmdb.org/t/p/w92/wdrCwmkt1s2zB4iFBMbAMi4rIq.png' },
+    { key: 'nickelodeon', title: 'Nickelodeon', logoUrl: 'https://image.tmdb.org/t/p/w92/5VnSgU0EM63a0i4wsj2v0R2K3a.png' },
+    { key: 'peacock', title: 'Peacock', logoUrl: 'https://image.tmdb.org/t/p/w92/x17l3V6DkUYJcUGW8uL6o23S86.png' },
+    { key: 'crunchyroll', title: 'Crunchyroll', logoUrl: 'https://image.tmdb.org/t/p/w92/vj4I0Lcf3DT6yH8G3pSjW3mCgD.png' },
+    { key: 'anime', title: 'Anime' },
+  ];
 
   return (
     <div>
@@ -89,34 +63,17 @@ const HomePage: NextPage<HomePageProps> = ({ frontPageData, error }) => {
           />
         )}
         <div>
-          {/* Trending Now carousel remains at the top */}
-          {frontPageData.trending && frontPageData.trending.length > 0 && (
-            <Carousel title="Trending Now" items={frontPageData.trending} isLargeRow />
-          )}
-
-          {/* Dynamically render carousels for each watch provider */}
-          {sortedProviderNames.map(providerName => (
-            groupedByProvider[providerName] && groupedByProvider[providerName].length > 0 && (
+          {SECTIONS.map(section => (
+            frontPageData[section.key] && frontPageData[section.key].length > 0 && (
               <Carousel
-                key={providerName}
-                title={`${providerName} ~`}
-                items={groupedByProvider[providerName]}
+                key={section.key}
+                title={section.title}
+                logoUrl={(section as any).logoUrl}
+                items={frontPageData[section.key]}
+                isLargeRow={section.isLargeRow}
               />
             )
           ))}
-
-          {/* Optionally keep popular and top-rated carousels, or remove if grouped by provider covers them */}
-          {/*
-          {frontPageData.popular_movies && frontPageData.popular_movies.length > 0 && (
-            <Carousel title="Popular Movies" items={frontPageData.popular_movies} />
-          )}
-          {frontPageData.popular_tv && frontPageData.popular_tv.length > 0 && (
-            <Carousel title="Popular TV Shows" items={frontPageData.popular_tv} />
-          )}
-          {frontPageData.top_rated && frontPageData.top_rated.length > 0 && (
-            <Carousel title="Top Rated Movies" items={frontPageData.top_rated} />
-          )}
-          */}
         </div>
       </main>
     </div>
@@ -124,12 +81,51 @@ const HomePage: NextPage<HomePageProps> = ({ frontPageData, error }) => {
 };
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
-  try {
-    const res = await fetch('http://localhost:3000/api/v1/frontpage');
+  const TMDB_API_KEY = process.env.TMDB_API_KEY;
+  const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+
+  const SECTIONS_CONFIG = [
+    { key: 'trending', title: 'Trending Now', endpoint: '/trending/all/week' },
+    { key: 'must_watch', title: 'Must Watch', params: { sort_by: 'popularity.desc' } },
+    { key: 'apple_tv', title: 'Apple TV+', params: { with_watch_providers: '2', watch_region: 'US' } },
+    { key: 'starz', title: 'Starz', params: { with_watch_providers: '431', watch_region: 'US' } },
+    { key: 'dc', title: 'DC', params: { with_companies: '9993' } },
+    { key: 'prime_video', title: 'Prime Video', params: { with_watch_providers: '9', watch_region: 'US' } },
+    { key: 'hbo', title: 'HBO', params: { with_watch_providers: '1899', watch_region: 'US' } },
+    { key: 'cartoon_network', title: 'Cartoon Network', params: { with_companies: '56' } },
+    { key: 'showtime', title: 'Showtime', params: { with_watch_providers: '67', watch_region: 'US' } },
+    { key: 'hulu', title: 'Hulu', params: { with_watch_providers: '15', watch_region: 'US' } },
+    { key: 'disney', title: 'Walt Disney Pictures', params: { with_companies: '2' } },
+    { key: 'nickelodeon', title: 'Nickelodeon', params: { with_companies: '13' } },
+    { key: 'peacock', title: 'Peacock', params: { with_watch_providers: '386', watch_region: 'US' } },
+    { key: 'crunchyroll', title: 'Crunchyroll', params: { with_watch_providers: '283', watch_region: 'US' } },
+    { key: 'anime', title: 'Anime', params: { with_genres: '16' } },
+  ];
+
+  const fetchFromTMDB = async (endpoint: string, params: any = {}) => {
+    const queryString = new URLSearchParams({
+      api_key: TMDB_API_KEY!,
+      ...params,
+    }).toString();
+    const res = await fetch(`${TMDB_BASE_URL}${endpoint}?${queryString}`);
     if (!res.ok) {
-      throw new Error('Failed to fetch front page data');
+      throw new Error(`Failed to fetch from TMDB: ${endpoint}`);
     }
-    const frontPageData = await res.json();
+    const data = await res.json();
+    return data.results;
+  };
+
+  try {
+    const frontPageData: FrontPageData = {};
+    for (const section of SECTIONS_CONFIG) {
+      let data;
+      if (section.endpoint) {
+        data = await fetchFromTMDB(section.endpoint);
+      } else {
+        data = await fetchFromTMDB('/discover/movie', section.params);
+      }
+      frontPageData[section.key] = data;
+    }
 
     return {
       props: {

@@ -9,47 +9,28 @@ interface BurgerMenuPanelProps {
 const BurgerMenuPanel: React.FC<BurgerMenuPanelProps> = ({ onClose }) => {
   // Placeholder data based on screenshots
   const movieFilters = [
-    { name: 'Trending Movies', href: '#' },
-    { name: 'Popular Movies', href: '#' },
-    { name: 'Top Rated', href: '#' },
-    { name: 'Marvel Movies', href: '#' },
-    { name: 'DC Movies', href: '#' },
-    { name: 'Paramount', href: '#' },
-    { name: 'Disney', href: '#' },
-    { name: 'Most Viewed', href: '#' },
+    { name: 'Trending Movies', href: '/movies/trending' },
+    { name: 'Popular Movies', href: '/movies/popular' },
+    { name: 'Top Rated', href: '/movies/top_rated' },
+    { name: 'Marvel Movies', href: '/movies/marvel' },
   ];
 
   const showFilters = [
-    { name: 'Popular Shows', href: '#' },
-    { name: 'Netflix Shows', href: '#' },
-    { name: 'HBO Shows', href: '#' },
-    { name: 'Apple TV+', href: '#' },
-    { name: 'Prime Video', href: '#' },
-    { name: 'Shahid VIP', href: '#' },
-    { name: 'Starz Play', href: '#' },
-    { name: 'Hulu', href: '#' },
+    { name: 'Popular Shows', href: '/shows/popular' },
+    { name: 'Top Rated', href: '/shows/top_rated' },
   ];
 
   const streamingFilters = [
-    { name: 'Netflix', href: '#' },
-    { name: 'Disney+', href: '#' },
-    { name: 'HBO Max', href: '#' },
-    { name: 'Apple TV+', href: '#' },
-    { name: 'Prime Video', href: '#' },
-    { name: 'Shahid VIP', href: '#' },
-    { name: 'Starz Play', href: '#' },
-    { name: 'Hulu', href: '#' },
+    { name: 'Netflix', href: '/streaming/netflix' },
+    { name: 'Disney+', href: '/streaming/disney+' },
+    { name: 'HBO Max', href: '/streaming/hbo_max' },
+    { name: 'Apple TV+', href: '/streaming/apple_tv+' },
+    { name: 'Prime Video', href: '/streaming/prime_video' },
+    { name: 'Hulu', href: '/streaming/hulu' },
   ];
 
   const discoverFilters = [
-    { name: 'Trending Today', href: '#' },
-    { name: 'Anime', href: '#' },
-    { name: 'Top Rated', href: '#' },
-    { name: 'Most Popular', href: '#' },
-    { name: 'Marvel Universe', href: '#' },
-    { name: 'DC Universe', href: '#' },
-    { name: 'Most Viewed', href: '#' },
-    { name: 'Your Watchlist', href: '#' },
+    { name: 'Trending Today', href: '/discover' },
   ];
 
   return (
@@ -64,7 +45,7 @@ const BurgerMenuPanel: React.FC<BurgerMenuPanelProps> = ({ onClose }) => {
           <div className={styles.filterGrid}>
             {movieFilters.map((filter) => (
               <Link key={filter.name} href={filter.href} legacyBehavior>
-                <span className={styles.filterItem} onClick={onClose}>{filter.name}</span>
+                <a className={styles.filterItem} onClick={onClose}>{filter.name}</a>
               </Link>
             ))}
           </div>
@@ -75,7 +56,7 @@ const BurgerMenuPanel: React.FC<BurgerMenuPanelProps> = ({ onClose }) => {
           <div className={styles.filterGrid}>
             {showFilters.map((filter) => (
               <Link key={filter.name} href={filter.href} legacyBehavior>
-                <span className={styles.filterItem} onClick={onClose}>{filter.name}</span>
+                <a className={styles.filterItem} onClick={onClose}>{filter.name}</a>
               </Link>
             ))}
           </div>
@@ -86,7 +67,7 @@ const BurgerMenuPanel: React.FC<BurgerMenuPanelProps> = ({ onClose }) => {
           <div className={styles.filterGrid}>
             {streamingFilters.map((filter) => (
               <Link key={filter.name} href={filter.href} legacyBehavior>
-                <span className={styles.filterItem} onClick={onClose}>{filter.name}</span>
+                <a className={styles.filterItem} onClick={onClose}>{filter.name}</a>
               </Link>
             ))}
           </div>
@@ -97,7 +78,7 @@ const BurgerMenuPanel: React.FC<BurgerMenuPanelProps> = ({ onClose }) => {
           <div className={styles.filterGrid}>
             {discoverFilters.map((filter) => (
               <Link key={filter.name} href={filter.href} legacyBehavior>
-                <span className={styles.filterItem} onClick={onClose}>{filter.name}</span>
+                <a className={styles.filterItem} onClick={onClose}>{filter.name}</a>
               </Link>
             ))}
           </div>

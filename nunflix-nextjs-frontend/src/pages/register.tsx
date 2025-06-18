@@ -94,7 +94,7 @@ const RegisterPage: NextPage = () => {
           </button>
           <p className={styles.switchFormText}>
             Already have an account?{' '}
-            <Link href="/login" className={styles.switchFormLink}>Login here</Link>
+            <Link href="/login" legacyBehavior><a className={styles.switchFormLink}>Login here</a></Link>
           </p>
         </form>
       </main>

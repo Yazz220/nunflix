@@ -207,8 +207,8 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
                 </div>
               )}
               {details.stream_sources && details.stream_sources.length > 0 && (
-                <Link href={`/watch/${details.id}?type=${details.media_type}`} className={`${styles.actionButton} ${styles.playButton}`}> 
-                  ▶ Play
+                <Link href={`/watch/${details.id}?type=${details.media_type}`} legacyBehavior>
+                  <a className={`${styles.actionButton} ${styles.playButton}`}>▶ Play</a>
                 </Link>
               )}
               {/* Add to Watchlist Button Placeholder */}
@@ -316,8 +316,8 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
                 <Link
                   key={item.id}
                   href={`/title/${item.id}?type=${item.media_type}`}
-                  className={styles.similarCard}
                   legacyBehavior>
+                  <a className={styles.similarCard}>
                     <Image
                         src={item.poster_path ? `${TMDB_IMAGE_BASE_URL_W500}${item.poster_path}` : '/placeholder-poster.png'}
                         alt={item.title}
@@ -326,6 +326,7 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
                         unoptimized={!item.poster_path}
                     />
                     <p className={styles.similarTitle}>{item.title}</p>
+                  </a>
                 </Link>
               ))}
             </div>

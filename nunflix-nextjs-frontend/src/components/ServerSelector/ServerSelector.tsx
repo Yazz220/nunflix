@@ -12,37 +12,37 @@ interface StreamSource {
 interface ServerSelectorProps {
   sources: StreamSource[];
   selectedSource: StreamSource | null;
-  onSelectSource: (source: StreamSource) => void;
+  onSourceChange: (source: StreamSource) => void;
 }
 
-const ServerSelector: React.FC<ServerSelectorProps> = ({ sources, selectedSource, onSelectSource }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleSelectSource = (source: StreamSource) => {
-    onSelectSource(source);
-    setIsOpen(false);
-  };
-
+const ServerSelector: React.FC<ServerSelectorProps> = ({ sources, selectedSource, onSourceChange }) => {
   return (
-    <div className={styles.serverSelector}>
-      <button className={styles.changeServerButton} onClick={() => setIsOpen(!isOpen)}>
+    <div className={styles.serverSelectorPanel}>
+      <div className={styles.serverSelectorHeader}>
         <FaCog />
-        <span>Change Server</span>
-        <span>{selectedSource?.provider_name || selectedSource?.label}</span>
-      </button>
-      {isOpen && (
-        <ul className={styles.serverList}>
-          {sources.map((source) => (
-            <li
-              key={source.label}
-              className={selectedSource?.label === source.label ? styles.active : ''}
-              onClick={() => handleSelectSource(source)}
+        <h3>Available Servers</h3>
+      </div>
+      <ul className={styles.serverList}>
+        {sources.map((source) => (
+          <li key={source.label}>
+            <button
+              className={`${styles.serverButton} ${selectedSource?.label === source.label ? styles.active : ''}`}
+              onClick={() => onSourceChange(source)}
             >
-              {source.provider_name || source.label}
-            </li>
-          ))}
-        </ul>
-      )}
+              <div className={styles.serverInfo}>
+                {source.logo_path ? (
+                  <img src={`https://image.tmdb.org/t/p/w92${source.logo_path}`} alt={source.provider_name} className={styles.providerLogo} />
+                ) : (
+                  <span>{source.provider_name || source.label}</span>
+                )}
+              </div>
+              {selectedSource?.label === source.label && (
+                <span className={styles.activeLabel}>Currently Active</span>
+              )}
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

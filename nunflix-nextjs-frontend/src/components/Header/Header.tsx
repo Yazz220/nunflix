@@ -44,44 +44,25 @@ const Header: React.FC = () => { // Re-adding the component definition
 
   // Sample data for dropdowns - can be moved to a separate file/constants
   const moviesDropdownItems: DropdownLink[] = [
-    { name: 'Trending Movies', href: '#' },
-    { name: 'Popular Movies', href: '#' },
-    { name: 'Top Rated', href: '#' },
-    { name: 'Marvel Movies', href: '#' },
-    { name: 'DC Movies', href: '#' },
-    { name: 'Paramount', href: '#' },
-    { name: 'Disney', href: '#' },
-    { name: 'Most Viewed', href: '#' },
+    { name: 'Trending Movies', href: '/movies/trending' },
+    { name: 'Popular Movies', href: '/movies/popular' },
+    { name: 'Top Rated', href: '/movies/top_rated' },
+    { name: 'Marvel Movies', href: '/movies/marvel' },
   ];
   const showsDropdownItems: DropdownLink[] = [
-    { name: 'Popular Shows', href: '#' },
-    { name: 'Netflix Shows', href: '#' },
-    { name: 'HBO Shows', href: '#' },
-    { name: 'Apple TV+', href: '#' },
-    { name: 'Prime Video', href: '#' },
-    { name: 'Shahid VIP', href: '#' },
-    { name: 'Starz Play', href: '#' },
-    { name: 'Hulu', href: '#' },
+    { name: 'Popular Shows', href: '/shows/popular' },
+    { name: 'Top Rated', href: '/shows/top_rated' },
   ];
   const streamingDropdownItems: DropdownLink[] = [
-    { name: 'Netflix', href: '#' },
-    { name: 'Disney+', href: '#' },
-    { name: 'HBO Max', href: '#' },
-    { name: 'Apple TV+', href: '#' },
-    { name: 'Prime Video', href: '#' },
-    { name: 'Shahid VIP', href: '#' },
-    { name: 'Starz Play', href: '#' },
-    { name: 'Hulu', href: '#' },
+    { name: 'Netflix', href: '/streaming/netflix' },
+    { name: 'Disney+', href: '/streaming/disney+' },
+    { name: 'HBO Max', href: '/streaming/hbo_max' },
+    { name: 'Apple TV+', href: '/streaming/apple_tv+' },
+    { name: 'Prime Video', href: '/streaming/prime_video' },
+    { name: 'Hulu', href: '/streaming/hulu' },
   ];
   const discoverDropdownItems: DropdownLink[] = [
-    { name: 'Trending Today', href: '#' },
-    { name: 'Anime', href: '#' },
-    { name: 'Top Rated', href: '#' },
-    { name: 'Most Popular', href: '#' },
-    { name: 'Marvel Universe', href: '#' },
-    { name: 'DC Universe', href: '#' },
-    { name: 'Most Viewed', href: '#' },
-    { name: 'Your Watchlist', href: '#' },
+    { name: 'Trending Today', href: '/discover' },
   ];
 
   const transitionNavBar = () => {
@@ -135,13 +116,15 @@ const Header: React.FC = () => { // Re-adding the component definition
             ☰ {/* Unicode Burger Icon */}
           </button>
           <Link href="/" legacyBehavior>
-            <Image
-              src="/nunflix-logo.png"
-              alt="Nunflix Logo"
-              width={100}
-              height={40}
-              unoptimized
-            />
+            <a>
+              <Image
+                src="/nunflix-logo.png"
+                alt="Nunflix Logo"
+                width={100}
+                height={40}
+                unoptimized
+              />
+            </a>
           </Link>
           <nav className={styles.navLinks}>
             <div
@@ -149,7 +132,7 @@ const Header: React.FC = () => { // Re-adding the component definition
               onMouseEnter={() => handleMouseEnter('movies')}
               onMouseLeave={handleMouseLeave}
             >
-              <Link href="/movies" className={styles.navLinkItem}>Movies</Link>
+              <Link href="/movies" legacyBehavior><a className={styles.navLinkItem}>Movies</a></Link>
               {activeDropdown === 'movies' && (
                 <DropdownPanel
                   title="Movies"
@@ -166,7 +149,7 @@ const Header: React.FC = () => { // Re-adding the component definition
               onMouseEnter={() => handleMouseEnter('shows')}
               onMouseLeave={handleMouseLeave}
             >
-              <Link href="/tv" className={styles.navLinkItem}>Shows</Link>
+              <Link href="/tv" legacyBehavior><a className={styles.navLinkItem}>Shows</a></Link>
               {activeDropdown === 'shows' && (
                 <DropdownPanel
                   title="Shows"
@@ -183,7 +166,7 @@ const Header: React.FC = () => { // Re-adding the component definition
               onMouseEnter={() => handleMouseEnter('streaming')}
               onMouseLeave={handleMouseLeave}
             >
-              <Link href="/#" className={styles.navLinkItem}>Streaming</Link> {/* Placeholder main link */}
+              <Link href="/#" legacyBehavior><a className={styles.navLinkItem}>Streaming</a></Link> {/* Placeholder main link */}
               {activeDropdown === 'streaming' && (
                 <DropdownPanel
                   title="Streaming"
@@ -200,7 +183,7 @@ const Header: React.FC = () => { // Re-adding the component definition
               onMouseEnter={() => handleMouseEnter('discover')}
               onMouseLeave={handleMouseLeave}
             >
-              <Link href="/#" className={styles.navLinkItem}>Discover</Link> {/* Placeholder main link */}
+              <Link href="/#" legacyBehavior><a className={styles.navLinkItem}>Discover</a></Link> {/* Placeholder main link */}
               {activeDropdown === 'discover' && (
                 <DropdownPanel
                   title="Discover"
@@ -235,18 +218,20 @@ const Header: React.FC = () => { // Re-adding the component definition
           </div>
           {isAuthenticated ? (
             <Link href="/profile" legacyBehavior>
-              <Image
-                className={styles.navbar_avatar}
-                src={user?.avatar_url || "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"} // Use user avatar or placeholder
-                alt="Profile Avatar"
-                width={30}
-                height={30}
-                unoptimized
-              />
+              <a>
+                <Image
+                  className={styles.navbar_avatar}
+                  src={user?.avatar_url || "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"} // Use user avatar or placeholder
+                  alt="Profile Avatar"
+                  width={30}
+                  height={30}
+                  unoptimized
+                />
+              </a>
             </Link>
           ) : (
             <Link href="/login" legacyBehavior>
-              <button className={styles.loginButton}>Login</button>
+              <a className={styles.loginButton}>Login</a>
             </Link>
           )}
         </div>

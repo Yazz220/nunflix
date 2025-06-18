@@ -7,6 +7,7 @@ import styles from './Carousel.module.css';
 
 interface CarouselProps {
   title: string;
+  logoUrl?: string;
   items: ContentCardProps[] | null | undefined; // Allow items to be null or undefined during loading
   isLoading?: boolean;
   skeletonCount?: number;
@@ -15,6 +16,7 @@ interface CarouselProps {
 
 const Carousel: React.FC<CarouselProps> = ({
   title,
+  logoUrl,
   items,
   isLoading = false,
   skeletonCount = 5,
@@ -75,7 +77,7 @@ const Carousel: React.FC<CarouselProps> = ({
     return (
       <div className={styles.row}>
         <div className={styles.rowHeader}>
-          <h2 className={styles.rowTitle}>{title}</h2>
+          {logoUrl ? <img src={logoUrl} alt={title} className={styles.rowLogo} /> : <h2 className={styles.rowTitle}>{title}</h2>}
           {/* Placeholder for arrow group during loading if needed, or hide */}
         </div>
         <div className={styles.row_posters_loading}>
@@ -93,7 +95,7 @@ const Carousel: React.FC<CarouselProps> = ({
     return (
       <div className={styles.row}>
          <div className={styles.rowHeader}>
-          <h2 className={styles.rowTitle}>{title}</h2>
+          {logoUrl ? <img src={logoUrl} alt={title} className={styles.rowLogo} /> : <h2 className={styles.rowTitle}>{title}</h2>}
         </div>
         <p className={styles.emptyMessage}>No items to display in this category yet.</p>
       </div>
@@ -103,7 +105,7 @@ const Carousel: React.FC<CarouselProps> = ({
   return (
     <div className={styles.row}>
       <div className={styles.rowHeader}>
-        <h2 className={styles.rowTitle}>{title}</h2>
+        {logoUrl ? <img src={logoUrl} alt={title} className={styles.rowLogo} /> : <h2 className={styles.rowTitle}>{title}</h2>}
         <div className={styles.arrowButtonGroup}>
           {showLeftArrow && (
             <button

@@ -184,3 +184,10 @@
     font-size: 0.9rem;
   }
 }
+
+.rowLogo {
+  height: 25px; /* Adjust as needed */
+  width: auto;
+  margin-bottom: 1rem;
+  object-fit: contain;
+}
