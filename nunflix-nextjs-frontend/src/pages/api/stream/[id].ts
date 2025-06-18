@@ -25,7 +25,8 @@ export default async function handler(
     const { data: providers, error } = await supabase
       .from('embed_providers')
       .select('base_url, pattern, type')
-      .eq('is_active', true);
+      .eq('is_active', true)
+      .eq('type', 'tmdb');
 
     if (error) {
       Sentry.captureException(error);
@@ -40,18 +41,9 @@ export default async function handler(
     const streamSources = [];
 
     for (const provider of shuffledProviders) {
-      let embedUrl: string;
-      if (provider.type === 'tmdb') {
-        embedUrl = provider.pattern
-          .replace('{type}', type)
-          .replace('{id}', id);
-      } else {
-        // Placeholder for scrape-based providers
-        // const fileId = await getScrapedFileId(provider.base_url, id);
-        // embedUrl = provider.pattern.replace('{fileId}', fileId);
-        // For now, we'll just use the base url and id
-        embedUrl = `${provider.base_url}${id}`;
-      }
+      const embedUrl = provider.pattern
+        .replace('{type}', type)
+        .replace('{id}', id);
 
       try {
         const controller = new AbortController();

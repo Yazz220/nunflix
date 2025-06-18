@@ -22,10 +22,13 @@ jobs:
         uses: oven-sh/setup-bun@v1
 
       - name: Install dependencies
+        working-directory: ./nunflix-nextjs-frontend
         run: bun install
 
       - name: Lint
+        working-directory: ./nunflix-nextjs-frontend
         run: bun lint
 
       - name: Build
+        working-directory: ./nunflix-nextjs-frontend
         run: bun run build
