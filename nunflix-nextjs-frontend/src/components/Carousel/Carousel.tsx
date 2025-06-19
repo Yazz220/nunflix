@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useInView } from 'react-intersection-observer';
 import ContentCard, { ContentCardProps } from '../ContentCard/ContentCard';
 import SkeletonCard from '../SkeletonCard/SkeletonCard';
 import styles from './Carousel.module.css';
@@ -22,11 +24,15 @@ const Carousel: React.FC<CarouselProps> = ({
   skeletonCount = 5,
   isLargeRow = false
 }) => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    rootMargin: '200px 0px',
+  });
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
 
-  const debounce = <F extends (...args: any[]) => any>(func: F, waitFor: number) => {
+  const debounce = <F extends (...args: unknown[]) => void>(func: F, waitFor: number) => {
     let timeout: ReturnType<typeof setTimeout> | null = null;
 
     return (...args: Parameters<F>): void => {
@@ -73,11 +79,15 @@ const Carousel: React.FC<CarouselProps> = ({
     }
   };
 
+  if (!inView) {
+    return <div ref={ref} style={{ height: '300px' }} />;
+  }
+
   if (isLoading) {
     return (
       <div className={styles.row}>
         <div className={styles.rowHeader}>
-          {logoUrl ? <img src={logoUrl} alt={title} className={styles.rowLogo} /> : <h2 className={styles.rowTitle}>{title}</h2>}
+          {logoUrl ? <Image src={logoUrl} alt={title} className={styles.rowLogo} width={100} height={50} /> : <h2 className={styles.rowTitle}>{title}</h2>}
           {/* Placeholder for arrow group during loading if needed, or hide */}
         </div>
         <div className={styles.row_posters_loading}>
@@ -95,7 +105,7 @@ const Carousel: React.FC<CarouselProps> = ({
     return (
       <div className={styles.row}>
          <div className={styles.rowHeader}>
-          {logoUrl ? <img src={logoUrl} alt={title} className={styles.rowLogo} /> : <h2 className={styles.rowTitle}>{title}</h2>}
+          {logoUrl ? <Image src={logoUrl} alt={title} className={styles.rowLogo} width={100} height={50} /> : <h2 className={styles.rowTitle}>{title}</h2>}
         </div>
         <p className={styles.emptyMessage}>No items to display in this category yet.</p>
       </div>
@@ -103,9 +113,9 @@ const Carousel: React.FC<CarouselProps> = ({
   }
 
   return (
-    <div className={styles.row}>
+    <div className={styles.row} ref={ref}>
       <div className={styles.rowHeader}>
-        {logoUrl ? <img src={logoUrl} alt={title} className={styles.rowLogo} /> : <h2 className={styles.rowTitle}>{title}</h2>}
+        {logoUrl ? <Image src={logoUrl} alt={title} className={styles.rowLogo} width={100} height={50} /> : <h2 className={styles.rowTitle}>{title}</h2>}
         <div className={styles.arrowButtonGroup}>
           {showLeftArrow && (
             <button

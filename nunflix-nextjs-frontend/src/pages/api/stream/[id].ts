@@ -2,8 +2,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '@/lib/supabaseClient';
 import * as Sentry from '@sentry/nextjs';
 
+interface Provider {
+  base_url: string;
+  pattern: string;
+  type: string;
+}
+
 // Fisher-Yates shuffle algorithm
-const shuffleArray = (array: any[]) => {
+const shuffleArray = (array: Provider[]) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];

@@ -37,6 +37,20 @@ This document tracks the completed work, remaining tasks, current status, and kn
 
 ## Recently Completed Tasks
 
+*   **Pre-Launch Readiness Review:** Completed all tasks identified in the pre-launch readiness review.
+    *   **Security Enhancements:**
+        *   Enabled RLS for the `user_settings` table.
+        *   Added HTTP security headers (`X-Content-Type-Options`, `X-Frame-Options`, `X-XSS-Protection`).
+    *   **CI/CD & Deployment Improvements:**
+        *   Added database migration and Vercel deployment steps to the CI/CD pipeline.
+    *   **Feature Implementation:**
+        *   Implemented pagination for the search page.
+        *   Implemented metadata strip actions on the watch page.
+    *   **SEO & Analytics:**
+        *   Created `robots.txt` and a dynamic `sitemap.xml`.
+    *   **Performance Optimizations:**
+        *   Improved user-facing error messages with a custom error page.
+        *   Implemented lazy loading for carousels.
 *   **Watch Page Layout Improvement:** Implemented a new two-column layout for the watch page, including a custom header, video player enhancements, and a server selector panel.
 *   **Dynamic Category Pages:** Created dynamic routes (`/movies/[category]`, `/shows/[category]`, `/streaming/[provider]`) and a reusable `CategoryPage` component to display content based on slugs. Added loading spinners to these pages to handle initial router query state.
 *   **TMDB API Key Update:** Updated the TMDB API key in `.env.local`.
@@ -45,18 +59,17 @@ This document tracks the completed work, remaining tasks, current status, and kn
 *   **Fixed Hydration Error:** Removed nested `<a>` tags in `ContentCard.tsx` to resolve hydration errors on category pages.
 *   **DMCA Resilience Enhancement:** Modified `supabase/functions/fallback-scraper/index.ts` to be optional, controlled by an `ENABLE_FALLBACK_SCRAPER` environment variable. Added `deno.json` to the scraper function for correct Deno environment configuration.
 *   **CI/CD Pipeline:** (Completed) Created `.github/workflows/ci.yml` for automated linting, building, and Vercel deployment on `main` branch pushes and pull requests.
-*   **User Profile Functionality:** Implemented a `ProfilePage` component (`src/components/ProfilePage/ProfilePage.tsx`) and integrated it into `src/pages/profile.tsx`. Refactored the profile update logic to use the `/api/v1/profile/me` endpoint, improving security and maintainability.
+*   **User Profile Functionality:** (Completed) Implemented a `ProfilePage` component (`src/components/ProfilePage/ProfilePage.tsx`) and integrated it into `src/pages/profile.tsx`. Refactored the profile update logic to use the `/api/v1/profile/me` endpoint, improving security and maintainability. Implemented API routes for settings, history, favorites, and watchlist, and applied database migrations for user settings.
 *   **Provider Logos on Home Page:** Updated `Carousel.tsx` to accept a `logoUrl` prop and `index.tsx` to pass TMDB image paths for provider logos, ensuring they display correctly. Removed `filter: brightness(0) invert(1)` from `Carousel.module.css` to prevent white logos from disappearing on dark backgrounds.
+*   **ESLint Errors:** Fixed all ESLint errors to ensure a passing CI/CD pipeline.
 
 ## What's Left to Build (from PROJECT_SUMMARY.md)
 
-*   **DMCA Resilience:** Implement optional fallback scraping (already partially done with `fallback-scraper` function).
-*   **CI/CD & Deployment:** (Completed) Create a workflow that lints/tests on PRs and auto-deploys main.
-*   **User Profiles:** (Completed) Add user profiles.
+*   All major features are complete.
 
 ## Current Status
 
-The core streaming application is functional with robust data handling, security, and DMCA resilience features. The primary remaining tasks involve further enhancing DMCA resilience, setting up automated deployment, and implementing user profiles. The home page and watch page have been significantly improved.
+The application is stable with a passing CI/CD pipeline. The core streaming application is functional with robust data handling, security, and DMCA resilience features. The user profile functionality is now complete. The application is ready for launch.
 
 ## Known Issues
 

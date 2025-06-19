@@ -1,11 +1,8 @@
-import React from 'react';
-import ReactPlayer from 'react-player/lazy';
-import type { ReactPlayerProps } from 'react-player/lazy';
+import React, { forwardRef } from 'react';
+import Player from 'react-player/lazy';
 
-const VideoPlayer = React.forwardRef<ReactPlayer, ReactPlayerProps>((props, ref) => {
-  return <ReactPlayer {...props} ref={ref} />;
-});
+const VideoPlayer = (props: any, ref: any) => {
+  return <Player {...props} ref={ref} />;
+};
 
-VideoPlayer.displayName = 'VideoPlayer';
-
-export default VideoPlayer;
+export default forwardRef(VideoPlayer);

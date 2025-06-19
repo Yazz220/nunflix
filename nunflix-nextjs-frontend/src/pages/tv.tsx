@@ -39,7 +39,7 @@ const TVShowsPage: NextPage<TVShowsPageProps> = ({ tvShowsData, error, genres, i
       pathname: router.pathname,
       query: query,
     }, undefined, { shallow: true }); // shallow: true to avoid full page reload
-  }, [selectedGenre, sortOrder, currentPage]);
+  }, [selectedGenre, sortOrder, currentPage, router]);
 
   const handleGenreChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedGenre(event.target.value);
@@ -184,7 +184,7 @@ export const getServerSideProps: GetServerSideProps<TVShowsPageProps> = async (c
     
     if (genresError) throw genresError;
 
-    const uniqueGenres = Array.from(new Set(genresData.flatMap((item: any) => item.genres || []))).filter(Boolean) as string[];
+    const uniqueGenres = Array.from(new Set(genresData.flatMap((item: { genres: string[] }) => item.genres || []))).filter(Boolean) as string[];
 
     let tvShowQuery = supabase
       .from('titles')
@@ -234,8 +234,8 @@ export const getServerSideProps: GetServerSideProps<TVShowsPageProps> = async (c
         initialSort: sortOrder,
       },
     };
-  } catch (error: any) {
-    console.error('Failed to fetch TV shows:', error.message);
+  } catch (error) {
+    console.error('Failed to fetch TV shows:', (error as Error).message);
     return {
       props: {
         tvShowsData: null,

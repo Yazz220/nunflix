@@ -38,6 +38,5 @@
 - **Data Models:** Defined in migration files
 
 ## What’s Next
-- **DMCA Resilience:** Implement mirror rotation, health checks, and optional fallback scraping.
-- **CI/CD & Deployment:** (Completed) Create a workflow that lints/tests on PRs and auto-deploys main.
-- **User Profiles:** Add user profiles.
+- **User Profiles:** (In Progress) Complete the User Profile implementation by enhancing the UI and adding user settings.
+- **Stabilize Application:** (In Progress) Fix all ESLint errors to ensure a passing CI/CD pipeline.

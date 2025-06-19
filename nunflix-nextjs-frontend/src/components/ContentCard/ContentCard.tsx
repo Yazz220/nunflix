@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuthStore, FavoriteItem } from '@/stores/authStore';
@@ -26,8 +26,6 @@ export interface ContentCardProps {
   isLarge?: boolean;
 }
 
-const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
-
 const ContentCard: React.FC<ContentCardProps> = ({
   id,
   title,
@@ -38,17 +36,13 @@ const ContentCard: React.FC<ContentCardProps> = ({
   progress,
   isLarge = false,
   // progress_seconds and duration_seconds are available if needed for display text
-  watch_providers, // Destructure watch_providers here
 }) => {
   const {
     isAuthenticated,
-    isFavorited: storeIsFavorited,
     addFavorite,
     removeFavorite,
-    isOnWatchlist: storeIsOnWatchlist, // Added for watchlist
     addToWatchlist, // Added
     removeFromWatchlist, // Added
-    token,
     user
   } = useAuthStore();
   const setGlobalError = useUIStore((state) => state.setError);
@@ -112,9 +106,9 @@ const ContentCard: React.FC<ContentCardProps> = ({
         if (error) throw error;
         add(item);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error(`Failed to toggle ${type}:`, error);
-      const message = error.response?.data?.error || error.message || `Failed to update ${type}. Please try again.`;
+      const message = (error as Error).message || `Failed to update ${type}. Please try again.`;
       setGlobalError(message);
     } finally {
       if (type === 'favorite') {
@@ -129,8 +123,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
   const imageUrl = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : 'https://placehold.co/200x300.png';
 
   return (
-    <Link href={`/title/${numericId}?type=${media_type || 'movie'}`} legacyBehavior>
-      <a className={`${styles.card} ${isLarge ? styles.cardLarge : ''}`}>
+    <Link href={`/title/${numericId}?type=${media_type || 'movie'}`} className={`${styles.card} ${isLarge ? styles.cardLarge : ''}`}>
         <div className={styles.actionButtonsWrapper}> {/* Wrapper for action buttons */}
           <button
             className={`${styles.actionButton} ${styles.favoriteButton} ${isFavorited ? styles.favoriteButtonActive : ''}`}
@@ -187,7 +180,6 @@ const ContentCard: React.FC<ContentCardProps> = ({
             </div>
           </div>
         </div>
-      </a>
     </Link>
   );
 };

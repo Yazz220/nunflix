@@ -1,8 +1,23 @@
 import * as Sentry from "@sentry/nextjs";
-import Error from "next/error";
+import Link from 'next/link';
+import styles from '@/styles/ExplorePage.module.css';
 
-const CustomErrorComponent = (props) => {
-  return <Error statusCode={props.statusCode} />;
+const CustomErrorComponent = ({ statusCode }) => {
+  return (
+    <div className={styles.explorePageContainer}>
+      <main className={styles.mainContent}>
+        <h1 className={styles.pageTitle}>
+          {statusCode
+            ? `An error ${statusCode} occurred on server`
+            : 'An error occurred on client'}
+        </h1>
+        <p>Sorry, something went wrong. Please try again later.</p>
+        <Link href="/">
+          Go back home
+        </Link>
+      </main>
+    </div>
+  );
 };
 
 CustomErrorComponent.getInitialProps = async (contextData) => {
@@ -11,7 +26,7 @@ CustomErrorComponent.getInitialProps = async (contextData) => {
   await Sentry.captureUnderscoreErrorException(contextData);
 
   // This will contain the status code of the response
-  return Error.getInitialProps(contextData);
+  return { statusCode: contextData.res ? contextData.res.statusCode : contextData.err ? contextData.err.statusCode : 404 };
 };
 
 export default CustomErrorComponent;

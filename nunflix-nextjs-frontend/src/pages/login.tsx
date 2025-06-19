@@ -35,9 +35,9 @@ const LoginPage: NextPage = () => {
     try {
       await loginAction(email, password);
       router.push('/profile');
-    } catch (err: any) {
+    } catch (err) {
       console.error('Login failed', err);
-      const message = err.message || 'Login failed. Please check your credentials and try again.';
+      const message = (err as Error).message || 'Login failed. Please check your credentials and try again.';
       setGlobalError(message);
     } finally {
       setIsLoading(false);
@@ -82,7 +82,7 @@ const LoginPage: NextPage = () => {
           </button>
           <p className={styles.switchFormText}>
             Don't have an account?{' '}
-            <Link href="/register" legacyBehavior><a className={styles.switchFormLink}>Register here</a></Link>
+            <Link href="/register" className={styles.switchFormLink}>Register here</Link>
           </p>
         </form>
       </main>

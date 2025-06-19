@@ -1,9 +1,7 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import type ReactPlayer from 'react-player';
 import { supabase } from '@/lib/supabaseClient';
 import { useAuthStore } from '@/stores/authStore';
 import { useUIStore } from '@/stores/uiStore';
@@ -13,9 +11,10 @@ import Image from 'next/image';
 import { parseTitleDetails } from '@/lib/utils';
 import ServerSelector from '@/components/ServerSelector/ServerSelector';
 import EpisodeList from '@/components/EpisodeList/EpisodeList';
-import { FaCog, FaChevronLeft, FaChevronRight, FaArrowLeft, FaLightbulb, FaUser, FaExternalLinkAlt, FaInfoCircle, FaUsers, FaExpand, FaList } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaArrowLeft, FaInfoCircle, FaUsers, FaExpand, FaList } from 'react-icons/fa';
+import React, { forwardRef } from 'react';
 
-const ReactPlayerComponent = dynamic(() => import('react-player/lazy').then(mod => mod.default), { ssr: false });
+const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
 
 interface StreamSource {
   label: string;
@@ -76,7 +75,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
   const { token, isAuthenticated } = useAuthStore();
   const setGlobalError = useUIStore((state) => state.setError);
 
-  const playerRef = useRef<ReactPlayer>(null);
+  const playerRef = useRef<any>(null);
   const [titleDetails, setTitleDetails] = useState<TitleDetails | null>(initialTitleDetails);
   const [selectedSource, setSelectedSource] = useState<StreamSource | null>(null);
   const [currentSeasonDetails, setCurrentSeasonDetails] = useState<SeasonDetails | null>(initialSeasonDetails || null);
@@ -140,9 +139,9 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
           } else {
             setSelectedEpisodeNumber(1);
           }
-        } catch (err: any) {
+        } catch (err) {
           console.error(`Failed to fetch season ${selectedSeasonNumber} details:`, err);
-          const message = err.message || `Failed to load episodes for season ${selectedSeasonNumber}.`;
+          const message = (err as Error).message || `Failed to load episodes for season ${selectedSeasonNumber}.`;
           setGlobalError(message);
           setError(message);
           setCurrentSeasonDetails(null);
@@ -203,9 +202,9 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
           Math.round(duration),
           type as 'movie' | 'tv'
         );
-      } catch (err: any) {
+      } catch (err) {
         console.error('Failed to update progress:', err);
-        const message = err.response?.data?.error || err.message || 'Failed to update viewing progress.';
+        const message = (err as any).response?.data?.error || (err as Error).message || 'Failed to update viewing progress.';
         setGlobalError(message);
       }
     }, 2000); // Debounce for 2 seconds
@@ -273,7 +272,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
     
     // For TV shows, we need to find the correct episode embed URL if available, or fall back to season/show URL
     if (type === 'tv' && currentSeasonDetails) {
-      const episode = currentSeasonDetails.episodes.find(ep => ep.episode_number === selectedEpisodeNumber);
+      // const episode = currentSeasonDetails.episodes.find(ep => ep.episode_number === selectedEpisodeNumber);
       // Assuming embed_url from stream_sources for TV shows might be for the whole series, or a placeholder
       // For actual episode-specific URLs, you might need a different TMDB API endpoint or data source.
       return selectedSource.embed_url; // For now, use the selected source's embed_url for TV
@@ -281,16 +280,15 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
     return selectedSource.embed_url; // Default for movie or if TV episode embed not found
   };
 
-  const handlePlayerError = (e: any) => {
+  const handlePlayerError = (e: Error) => {
     console.error('ReactPlayer Error:', e);
     setGlobalError('Playback error. Please try another source or refresh the page.');
   };
 
   const isTvShow = type === 'tv';
-  const totalSeasons = titleDetails?.seasons?.length || 0;
 
   if (error) {
-    return <div className={styles.errorContainer}><p>Error: {error}</p><Link href="/" legacyBehavior><a>Go back home</a></Link></div>;
+    return <div className={styles.errorContainer}><p>Error: {error}</p><Link href="/">Go back home</Link></div>;
   }
 
   if (!titleDetails) {
@@ -301,12 +299,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
   const displayTitle = isTvShow && currentSeasonDetails && selectedEpisodeNumber
     ? `${titleDetails.title} - S${selectedSeasonNumber}:E${selectedEpisodeNumber} ${currentSeasonDetails.episodes.find(ep => ep.episode_number === selectedEpisodeNumber)?.name || ''}`
     : titleDetails.title;
-
-  // Determine the overview to display (movie overview or TV episode overview)
-  const displayOverview = isTvShow && currentSeasonDetails && selectedEpisodeNumber
-    ? currentSeasonDetails.episodes.find(ep => ep.episode_number === selectedEpisodeNumber)?.overview || titleDetails.overview
-    : titleDetails.overview;
-
 
   return (
     <>
@@ -326,7 +318,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
         <div className={styles.playerColumn}>
           <div className={styles.playerWrapper}>
             {hasWindow && selectedSource ? (
-              <ReactPlayerComponent
+              <ReactPlayer
                 ref={playerRef}
                 url={getPlayerUrl()}
                 controls
@@ -363,9 +355,9 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
               </div>
             </div>
             <div className={styles.metadataActions}>
-              <button>Add to Queue</button>
-              <button>Save</button>
-              <button>Share</button>
+              <button onClick={() => alert('Added to queue!')}>Add to Queue</button>
+              <button onClick={() => alert('Saved!')}>Save</button>
+              <button onClick={() => navigator.clipboard.writeText(window.location.href)}>Share</button>
             </div>
           </div>
           <div className={styles.discussionSection}>
@@ -476,12 +468,12 @@ export const getServerSideProps: GetServerSideProps<WatchPageProps> = async (con
       },
     };
 
-  } catch (err: any) {
+  } catch (err) {
     console.error('WatchPage getServerSideProps: Unexpected error', err);
     return {
       props: {
         titleDetails: null,
-        error: err.message || 'An unexpected error occurred.',
+        error: (err as Error).message || 'An unexpected error occurred.',
       },
     };
   }

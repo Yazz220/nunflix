@@ -1,4 +1,11 @@
-export const CATEGORY_MAP: { [key: string]: any } = {
+interface Category {
+  sort_by?: string;
+  with_companies?: number;
+  with_watch_providers?: number;
+  watch_region?: string;
+}
+
+export const CATEGORY_MAP: { [key: string]: Category } = {
   trending: { sort_by: "popularity.desc" },
   popular: { sort_by: "popularity.desc" },
   top_rated: { sort_by: "vote_average.desc" },

@@ -32,3 +32,15 @@ jobs:
       - name: Build
         working-directory: ./nunflix-nextjs-frontend
         run: bun run build
+
+      - name: Push to Supabase
+        if: github.ref == 'refs/heads/main'
+        working-directory: ./nunflix-nextjs-frontend
+        run: npx supabase db push
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+
+      - name: Deploy to Vercel
+        if: github.ref == 'refs/heads/main'
+        run: npx vercel-cli deploy --prod --token=${{ secrets.VERCEL_TOKEN }}

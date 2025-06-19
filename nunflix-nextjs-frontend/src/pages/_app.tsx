@@ -1,5 +1,7 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
+import Head from "next/head";
+import Script from "next/script";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import GlobalErrorDisplay from "@/components/GlobalErrorDisplay/GlobalErrorDisplay"; // Import GlobalErrorDisplay
@@ -33,6 +35,27 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Head>
+        <title>Nunflix</title>
+        <meta name="description" content="Nunflix - Watch Movies & TV Shows Online" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Script
+        strategy="lazyOnload"
+        src="https://www.googletagmanager.com/gtag/js?id=YOUR_TRACKING_ID"
+      />
+      <Script
+        id="gtag-inline-script"
+        strategy="lazyOnload"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'YOUR_TRACKING_ID');
+          `,
+        }}
+      />
       <Header />
       <main style={{ flex: '1 0 auto', display: 'flex', flexDirection: 'column' }}>
         <Component {...pageProps} />

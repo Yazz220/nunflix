@@ -7,7 +7,12 @@ import { useRouter } from 'next/router'; // Import useRouter
 import styles from './Header.module.css';
 import { useAuthStore } from '@/stores/authStore'; // Added for auth state
 import BurgerMenuPanel from '../BurgerMenuPanel/BurgerMenuPanel'; // Uncommented
-import DropdownPanel, { DropdownLink } from '../DropdownPanel/DropdownPanel'; // Import DropdownPanel
+import DropdownPanel from '../DropdownPanel/DropdownPanel'; // Import DropdownPanel
+
+interface DropdownLink {
+  name: string;
+  href: string;
+}
 
 const Header: React.FC = () => { // Re-adding the component definition
   const [show, handleShow] = useState(false);
@@ -115,8 +120,7 @@ const Header: React.FC = () => { // Re-adding the component definition
           <button onClick={handleBurgerMenuToggle} className={styles.burgerMenuButton}>
             ☰ {/* Unicode Burger Icon */}
           </button>
-          <Link href="/" legacyBehavior>
-            <a>
+          <Link href="/">
               <Image
                 src="/nunflix-logo.png"
                 alt="Nunflix Logo"
@@ -124,7 +128,6 @@ const Header: React.FC = () => { // Re-adding the component definition
                 height={40}
                 unoptimized
               />
-            </a>
           </Link>
           <nav className={styles.navLinks}>
             <div
@@ -132,16 +135,15 @@ const Header: React.FC = () => { // Re-adding the component definition
               onMouseEnter={() => handleMouseEnter('movies')}
               onMouseLeave={handleMouseLeave}
             >
-              <Link href="/movies" legacyBehavior><a className={styles.navLinkItem}>Movies</a></Link>
+              <Link href="/movies" className={styles.navLinkItem}>Movies</Link>
               {activeDropdown === 'movies' && (
-                <DropdownPanel
-                  title="Movies"
-                  items={moviesDropdownItems}
-                  isOpen={activeDropdown === 'movies'}
-                  onMouseEnter={handleDropdownMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                  onLinkClick={() => setActiveDropdown(null)}
-                />
+                <DropdownPanel title="Movies" startOpen>
+                  {moviesDropdownItems.map((item) => (
+                    <Link key={item.name} href={item.href} className={styles.dropdownLink}>
+                      {item.name}
+                    </Link>
+                  ))}
+                </DropdownPanel>
               )}
             </div>
             <div
@@ -149,16 +151,15 @@ const Header: React.FC = () => { // Re-adding the component definition
               onMouseEnter={() => handleMouseEnter('shows')}
               onMouseLeave={handleMouseLeave}
             >
-              <Link href="/tv" legacyBehavior><a className={styles.navLinkItem}>Shows</a></Link>
+              <Link href="/tv" className={styles.navLinkItem}>Shows</Link>
               {activeDropdown === 'shows' && (
-                <DropdownPanel
-                  title="Shows"
-                  items={showsDropdownItems}
-                  isOpen={activeDropdown === 'shows'}
-                  onMouseEnter={handleDropdownMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                  onLinkClick={() => setActiveDropdown(null)}
-                />
+                <DropdownPanel title="Shows" startOpen>
+                  {showsDropdownItems.map((item) => (
+                    <Link key={item.name} href={item.href} className={styles.dropdownLink}>
+                      {item.name}
+                    </Link>
+                  ))}
+                </DropdownPanel>
               )}
             </div>
             <div
@@ -166,16 +167,15 @@ const Header: React.FC = () => { // Re-adding the component definition
               onMouseEnter={() => handleMouseEnter('streaming')}
               onMouseLeave={handleMouseLeave}
             >
-              <Link href="/#" legacyBehavior><a className={styles.navLinkItem}>Streaming</a></Link> {/* Placeholder main link */}
+              <Link href="/#" className={styles.navLinkItem}>Streaming</Link> {/* Placeholder main link */}
               {activeDropdown === 'streaming' && (
-                <DropdownPanel
-                  title="Streaming"
-                  items={streamingDropdownItems}
-                  isOpen={activeDropdown === 'streaming'}
-                  onMouseEnter={handleDropdownMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                  onLinkClick={() => setActiveDropdown(null)}
-                />
+                <DropdownPanel title="Streaming" startOpen>
+                  {streamingDropdownItems.map((item) => (
+                    <Link key={item.name} href={item.href} className={styles.dropdownLink}>
+                      {item.name}
+                    </Link>
+                  ))}
+                </DropdownPanel>
               )}
             </div>
             <div
@@ -183,16 +183,15 @@ const Header: React.FC = () => { // Re-adding the component definition
               onMouseEnter={() => handleMouseEnter('discover')}
               onMouseLeave={handleMouseLeave}
             >
-              <Link href="/#" legacyBehavior><a className={styles.navLinkItem}>Discover</a></Link> {/* Placeholder main link */}
+              <Link href="/#" className={styles.navLinkItem}>Discover</Link> {/* Placeholder main link */}
               {activeDropdown === 'discover' && (
-                <DropdownPanel
-                  title="Discover"
-                  items={discoverDropdownItems}
-                  isOpen={activeDropdown === 'discover'}
-                  onMouseEnter={handleDropdownMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                  onLinkClick={() => setActiveDropdown(null)}
-                />
+                <DropdownPanel title="Discover" startOpen>
+                  {discoverDropdownItems.map((item) => (
+                    <Link key={item.name} href={item.href} className={styles.dropdownLink}>
+                      {item.name}
+                    </Link>
+                  ))}
+                </DropdownPanel>
               )}
             </div>
           </nav>
@@ -217,8 +216,7 @@ const Header: React.FC = () => { // Re-adding the component definition
             )}
           </div>
           {isAuthenticated ? (
-            <Link href="/profile" legacyBehavior>
-              <a>
+            <Link href="/profile">
                 <Image
                   className={styles.navbar_avatar}
                   src={user?.avatar_url || "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"} // Use user avatar or placeholder
@@ -227,11 +225,10 @@ const Header: React.FC = () => { // Re-adding the component definition
                   height={30}
                   unoptimized
                 />
-              </a>
             </Link>
           ) : (
-            <Link href="/login" legacyBehavior>
-              <a className={styles.loginButton}>Login</a>
+            <Link href="/login" className={styles.loginButton}>
+              Login
             </Link>
           )}
         </div>

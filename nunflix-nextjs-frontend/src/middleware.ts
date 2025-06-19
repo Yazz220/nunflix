@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 // import { Ratelimit } from '@upstash/ratelimit';
 // import { kv } from '@vercel/kv';
 
@@ -11,7 +11,7 @@ export const config = {
   matcher: '/api/:path*',
 };
 
-export default async function middleware(request: NextRequest) {
+export default async function middleware() {
   // const ip = request.ip ?? '127.0.0.1';
   // const { success, pending, limit, reset, remaining } = await ratelimit.limit(ip);
 

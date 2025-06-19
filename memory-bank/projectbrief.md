@@ -18,10 +18,11 @@ Nunflix is a video streaming application that allows users to discover, search, 
 *   **Discover:** Browse and discover new content.
 *   **Search:** Search for specific titles.
 *   **Watch:** Stream video content.
-*   **User Profiles:** (To be implemented)
+*   **User Profiles:** (In Progress)
 
 ## Project Goals
 
-*   Implement DMCA resilience features.
-*   Set up a CI/CD pipeline using GitHub Actions.
-*   Add user profile functionality.
+*   Implement DMCA resilience features. (Completed)
+*   Set up a CI/CD pipeline using GitHub Actions. (Completed)
+*   Add user profile functionality. (In Progress)
+*   Stabilize the application by fixing all ESLint errors. (In Progress)

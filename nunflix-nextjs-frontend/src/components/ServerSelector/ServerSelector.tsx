@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import Image from 'next/image';
 import styles from './ServerSelector.module.css';
 import { FaCog } from 'react-icons/fa';
 
@@ -31,7 +32,7 @@ const ServerSelector: React.FC<ServerSelectorProps> = ({ sources, selectedSource
             >
               <div className={styles.serverInfo}>
                 {source.logo_path ? (
-                  <img src={`https://image.tmdb.org/t/p/w92${source.logo_path}`} alt={source.provider_name} className={styles.providerLogo} />
+                  <Image src={`https://image.tmdb.org/t/p/w92${source.logo_path}`} alt={source.provider_name || 'Provider logo'} width={40} height={40} className={styles.providerLogo} />
                 ) : (
                   <span>{source.provider_name || source.label}</span>
                 )}

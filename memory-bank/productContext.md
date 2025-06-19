@@ -10,4 +10,4 @@ The project aims to provide a free and accessible platform for streaming movies 
 
 *   **Seamless Discovery:** Users should be able to easily find new and interesting content through browsing and searching.
 *   **Uninterrupted Streaming:** The viewing experience should be smooth and reliable.
-*   **Personalization:** (Future) Users should be able to create profiles and track their watch history.
+*   **Personalization:** (In Progress) Users should be able to create profiles and track their watch history.

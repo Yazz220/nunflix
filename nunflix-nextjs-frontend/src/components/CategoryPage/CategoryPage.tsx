@@ -1,10 +1,8 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, QueryFunctionContext } from '@tanstack/react-query';
 import ContentCard, { ContentCardProps } from '@/components/ContentCard/ContentCard';
 import SkeletonCard from '@/components/SkeletonCard/SkeletonCard';
 import styles from '@/styles/ExplorePage.module.css';
@@ -17,12 +15,12 @@ interface DiscoverResult {
   total_results: number;
 }
 
-const fetchDiscover = async ({ pageParam = 1, queryKey }: any): Promise<DiscoverResult> => {
-  const [_key, { media_type, ...params }] = queryKey;
+const fetchDiscover = async ({ pageParam = 1, queryKey }: QueryFunctionContext<[string, { media_type: string;[key: string]: unknown; }]>) => {
+  const [, { media_type, ...params }] = queryKey;
   const queryString = new URLSearchParams({
     media_type,
-    page: pageParam,
-    ...params,
+    page: String(pageParam),
+    ...(params as Record<string, string>),
   }).toString();
   const res = await fetch(`/api/v1/discover?${queryString}`);
   if (!res.ok) {
@@ -37,7 +35,6 @@ interface CategoryPageProps {
 }
 
 const CategoryPage: NextPage<CategoryPageProps> = ({ mediaType, filter }) => {
-  const router = useRouter();
   const { ref, inView } = useInView();
 
   const mappedParams = CATEGORY_MAP[filter] || {};
@@ -46,14 +43,13 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ mediaType, filter }) => {
     data,
     error,
     fetchNextPage,
-    hasNextPage,
     isFetching,
     isFetchingNextPage,
   } = useInfiniteQuery<DiscoverResult, Error>({
     queryKey: ['discover', { media_type: mediaType, ...mappedParams }],
     queryFn: fetchDiscover,
     initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
+    getNextPageParam: (lastPage) => {
       if (lastPage.page < lastPage.total_pages) {
         return lastPage.page + 1;
       }

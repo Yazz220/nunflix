@@ -14,7 +14,7 @@ const ProfilePage: NextPage = () => {
     if (!isAuthenticated && !token) {
       router.replace('/login');
     } else if (isAuthenticated && !user) {
-      fetchUser().catch((err: any) => {
+      fetchUser().catch((err) => {
         console.error("Failed to fetch user on profile page:", err);
         router.replace('/login');
       });

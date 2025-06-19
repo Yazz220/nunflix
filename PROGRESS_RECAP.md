@@ -36,9 +36,9 @@ Here’s a high-level summary of everything we’ve accomplished so far—and wh
 ## 🚀 Phase 6: CI/CD
 - **GitHub Actions:** Created a CI/CD workflow that lints and builds on every push and pull request to the `main` branch.
 
+## 🚀 Phase 7: Application Stabilization
+- **ESLint:** Fixed all ESLint errors to ensure a passing CI/CD pipeline.
+
 ## 🎯 What’s Next
-- **(Completed)** Finish Discover: Complete /api/v1/discover caching logic and build the Discover page with genre/sort filters + infinite scroll.
-- **(Completed)** DMCA Resilience: Implement mirror rotation, health checks, and optional fallback scraping to keep your embeds alive.
-- **(Completed)** CI/CD: Create a workflow that lints/tests on PRs and auto-deploys main.
+- **(In Progress)** User Profiles: Complete the User Profile implementation by enhancing the UI and adding user settings.
 - (Skipped for now) Admin Tools: On-demand dashboards for cache purges and stream-source management.
-- **User Profiles:** Add user profiles.

@@ -39,7 +39,7 @@ const MoviesPage: NextPage<MoviesPageProps> = ({ moviesData, error, genres, init
       pathname: router.pathname,
       query: query,
     }, undefined, { shallow: true }); // shallow: true to avoid full page reload
-  }, [selectedGenre, sortOrder, currentPage]);
+  }, [selectedGenre, sortOrder, currentPage, router]);
 
   const handleGenreChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedGenre(event.target.value);
@@ -104,9 +104,9 @@ const MoviesPage: NextPage<MoviesPageProps> = ({ moviesData, error, genres, init
               onChange={handleGenreChange}
             >
               <option value="">All Genres</option>
-              {genres.map((genre) => (
-                <option key={genre} value={genre}>
-                  {genre}
+              {genres.map((genre: any) => (
+                <option key={genre.id} value={genre.name}>
+                  {genre.name}
                 </option>
               ))}
             </select>
@@ -184,7 +184,7 @@ export const getServerSideProps: GetServerSideProps<MoviesPageProps> = async (co
     
     if (genresError) throw genresError;
 
-    const uniqueGenres = Array.from(new Set(genresData.flatMap((item: any) => item.genres || []))).filter(Boolean) as string[];
+    const uniqueGenres = Array.from(new Set(genresData.flatMap((item: { genres: string[] }) => item.genres || []))).filter(Boolean) as string[];
 
     let movieQuery = supabase
       .from('titles')
@@ -232,8 +232,8 @@ export const getServerSideProps: GetServerSideProps<MoviesPageProps> = async (co
         initialSort: sortOrder,
       },
     };
-  } catch (error: any) {
-    console.error('Failed to fetch movies:', error.message);
+  } catch (error) {
+    console.error('Failed to fetch movies:', (error as Error).message);
     return {
       props: {
         moviesData: null,

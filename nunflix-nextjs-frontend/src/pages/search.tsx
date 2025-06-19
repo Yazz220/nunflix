@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { supabase } from '@/lib/supabaseClient';
 import ContentCard, { ContentCardProps } from '@/components/ContentCard/ContentCard';
 import SkeletonCard from '@/components/SkeletonCard/SkeletonCard'; // Import SkeletonCard
 import styles from '@/styles/ExplorePage.module.css';
@@ -27,7 +27,7 @@ interface SearchPageProps {
 }
 
 const SearchPage: NextPage<SearchPageProps> = ({ searchResults, query, error }) => {
-  const router = useRouter(); // Can still use this for other client-side logic if needed
+  const router = useRouter();
 
   if (error) {
     return (
@@ -90,7 +90,7 @@ const SearchPage: NextPage<SearchPageProps> = ({ searchResults, query, error }) 
               return (
                 <div key={item.id} className={styles.personCardPlaceholder}>
                   <p>{item.title} ({item.known_for_department})</p>
-                  {item.poster_path && <img src={`https://image.tmdb.org/t/p/w185${item.poster_path}`} alt={item.title} width="100" />}
+                  {item.poster_path && <Image src={`https://image.tmdb.org/t/p/w185${item.poster_path}`} alt={item.title} width={100} height={150} />}
                 </div>
               );
             }
@@ -108,7 +108,25 @@ const SearchPage: NextPage<SearchPageProps> = ({ searchResults, query, error }) 
             );
           })}
         </div>
-        {/* TODO: Add pagination for search results */}
+        <div className={styles.paginationControls}>
+          <button
+            onClick={() => router.push(`/search?q=${query}&page=${searchResults.page - 1}`)}
+            disabled={searchResults.page <= 1}
+            className={styles.paginationButton}
+          >
+            Previous Page
+          </button>
+          <span className={styles.pageInfo}>
+            Page {searchResults.page} of {searchResults.total_pages}
+          </span>
+          <button
+            onClick={() => router.push(`/search?q=${query}&page=${searchResults.page + 1}`)}
+            disabled={searchResults.page >= searchResults.total_pages}
+            className={styles.paginationButton}
+          >
+            Next Page
+          </button>
+        </div>
       </main>
     </div>
   );
@@ -122,18 +140,12 @@ export const getServerSideProps: GetServerSideProps<SearchPageProps> = async (co
   }
 
   try {
-    const res = await fetch(`http://localhost:3000/api/v1/search?q=${query}`);
+    const page = context.query.page || '1';
+    const res = await fetch(`http://localhost:3000/api/v1/search?q=${query}&page=${page}`);
     if (!res.ok) {
       throw new Error('Failed to fetch search results');
     }
-    const data = await res.json();
-
-    const searchResults: SearchAPIResponse = {
-      page: 1,
-      results: data || [],
-      total_pages: 1, // TODO: Implement pagination
-      total_results: data?.length || 0,
-    };
+    const searchResults = await res.json();
 
     return {
       props: {
@@ -141,8 +153,8 @@ export const getServerSideProps: GetServerSideProps<SearchPageProps> = async (co
         query,
       },
     };
-  } catch (error: any) {
-    console.error(`Failed to fetch search results for "${query}":`, error.message);
+  } catch (error) {
+    console.error(`Failed to fetch search results for "${query}":`, (error as Error).message);
     return {
       props: {
         searchResults: null,

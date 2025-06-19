@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '@/lib/supabaseClient';
-import { CATEGORY_MAP } from '@/lib/category-map';
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
@@ -23,10 +22,10 @@ const SECTIONS = [
   { key: 'anime', title: 'Anime', params: { with_genres: '16' } },
 ];
 
-const fetchFromTMDB = async (endpoint: string, params: any = {}) => {
+const fetchFromTMDB = async (endpoint: string, params: Record<string, string | undefined> = {}) => {
   const queryString = new URLSearchParams({
     api_key: TMDB_API_KEY!,
-    ...params,
+    ...(params as Record<string, string>),
   }).toString();
   const res = await fetch(`${TMDB_BASE_URL}${endpoint}?${queryString}`);
   if (!res.ok) {
@@ -41,7 +40,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const frontpageData: { [key: string]: any } = {};
+    const frontpageData: Record<string, any[]> = {};
 
     for (const section of SECTIONS) {
       const cacheKey = `frontpage:${section.key}`;

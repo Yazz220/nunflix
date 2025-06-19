@@ -42,46 +42,46 @@ const BurgerMenuPanel: React.FC<BurgerMenuPanelProps> = ({ onClose }) => {
 
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>Movies</h2>
-          <div className={styles.filterGrid}>
-            {movieFilters.map((filter) => (
-              <Link key={filter.name} href={filter.href} legacyBehavior>
-                <a className={styles.filterItem} onClick={onClose}>{filter.name}</a>
-              </Link>
-            ))}
-          </div>
+                        <div className={styles.filterGrid}>
+                          {movieFilters.map((filter) => (
+                              <Link key={filter.name} href={filter.href} className={styles.filterItem} onClick={onClose}>
+                                {filter.name}
+                              </Link>
+                          ))}
+                        </div>
         </div>
 
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>Shows</h2>
-          <div className={styles.filterGrid}>
-            {showFilters.map((filter) => (
-              <Link key={filter.name} href={filter.href} legacyBehavior>
-                <a className={styles.filterItem} onClick={onClose}>{filter.name}</a>
-              </Link>
-            ))}
-          </div>
+                        <div className={styles.filterGrid}>
+                          {showFilters.map((filter) => (
+                              <Link key={filter.name} href={filter.href} className={styles.filterItem} onClick={onClose}>
+                                {filter.name}
+                              </Link>
+                          ))}
+                        </div>
         </div>
 
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>Streaming</h2>
-          <div className={styles.filterGrid}>
-            {streamingFilters.map((filter) => (
-              <Link key={filter.name} href={filter.href} legacyBehavior>
-                <a className={styles.filterItem} onClick={onClose}>{filter.name}</a>
-              </Link>
-            ))}
-          </div>
+                        <div className={styles.filterGrid}>
+                          {streamingFilters.map((filter) => (
+                              <Link key={filter.name} href={filter.href} className={styles.filterItem} onClick={onClose}>
+                                {filter.name}
+                              </Link>
+                          ))}
+                        </div>
         </div>
 
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>Discover</h2>
-          <div className={styles.filterGrid}>
-            {discoverFilters.map((filter) => (
-              <Link key={filter.name} href={filter.href} legacyBehavior>
-                <a className={styles.filterItem} onClick={onClose}>{filter.name}</a>
-              </Link>
-            ))}
-          </div>
+                        <div className={styles.filterGrid}>
+                          {discoverFilters.map((filter) => (
+                              <Link key={filter.name} href={filter.href} className={styles.filterItem} onClick={onClose}>
+                                {filter.name}
+                              </Link>
+                          ))}
+                        </div>
         </div>
       </div>
     </div>

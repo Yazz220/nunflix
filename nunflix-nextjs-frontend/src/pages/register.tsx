@@ -36,9 +36,9 @@ const RegisterPage: NextPage = () => {
     try {
       await registerAction(email, password);
       router.push('/profile');
-    } catch (err: any) {
+    } catch (err) {
       console.error('Registration failed', err);
-      const message = err.message || 'Registration failed. Please check your details and try again.';
+      const message = (err as Error).message || 'Registration failed. Please check your details and try again.';
       setGlobalError(message);
     } finally {
       setIsLoading(false);
@@ -94,7 +94,7 @@ const RegisterPage: NextPage = () => {
           </button>
           <p className={styles.switchFormText}>
             Already have an account?{' '}
-            <Link href="/login" legacyBehavior><a className={styles.switchFormLink}>Login here</a></Link>
+            <Link href="/login" className={styles.switchFormLink}>Login here</Link>
           </p>
         </form>
       </main>

@@ -1,5 +1,4 @@
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next';
-import { parseTitleDetails } from '@/lib/utils';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react'; // Import useState and useEffect
@@ -7,7 +6,6 @@ import { supabase } from '@/lib/supabaseClient';
 import Image from 'next/image';
 import styles from '@/styles/DetailPage.module.css'; // We'll create this
 import Link from 'next/link';
-import ContentCard, { ContentCardProps } from '@/components/ContentCard/ContentCard'; // Re-added ContentCard import
 
 // Based on research §3.2 and our backend /api/v1/title/:id response
 interface Genre { id: number; name: string; }
@@ -84,9 +82,6 @@ const TMDB_IMAGE_BASE_URL_ORIGINAL = 'https://image.tmdb.org/t/p/original';
 const TMDB_IMAGE_BASE_URL_W500 = 'https://image.tmdb.org/t/p/w500';
 
 const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initialEpisodes, initialSeasonNumber }) => {
-  const router = useRouter();
-  const { id, type: queryType } = router.query; // Get id and type from URL
-
   // Add console logs for debugging the 'Play' button href
   useEffect(() => {
     if (details) {
@@ -172,7 +167,7 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
               <span>{details.release_date?.substring(0, 4)}</span>
               {details.runtime ? <span>{details.runtime} min</span> : null}
               {details.media_type === 'tv' && details.number_of_seasons ? <span>{details.number_of_seasons} Season(s)</span> : null}
-              {details.genres.slice(0, 3).map((g: any) => <span key={g.id} className={styles.genreTag}>{g.name}</span>)}
+              {details.genres.slice(0, 3).map((g) => <span key={g.id} className={styles.genreTag}>{g.name}</span>)}
               <span className={styles.parentalGuide}>Parents Guide</span>
             </div>
             <div className={styles.rating}>
@@ -207,8 +202,8 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
                 </div>
               )}
               {details.stream_sources && details.stream_sources.length > 0 && (
-                <Link href={`/watch/${details.id}?type=${details.media_type}`} legacyBehavior>
-                  <a className={`${styles.actionButton} ${styles.playButton}`}>▶ Play</a>
+                <Link href={`/watch/${details.id}?type=${details.media_type}`} className={`${styles.actionButton} ${styles.playButton}`}>
+                  ▶ Play
                 </Link>
               )}
               {/* Add to Watchlist Button Placeholder */}
@@ -285,7 +280,7 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
                   <div key={episode.id} className={styles.episodeCard}> {/* Placeholder for EpisodeCard component */}
                     <Link
                       href={`/watch/${details.id}?type=tv&season=${selectedSeasonNumber}&episode=${episode.episode_number}`}
-                      legacyBehavior>
+                    >
                       {/* Basic Episode Info - to be replaced by EpisodeCard component */}
                       <div className={styles.episodeThumbnailPlaceholder}>
                         {episode.still_path ? (
@@ -316,8 +311,7 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
                 <Link
                   key={item.id}
                   href={`/title/${item.id}?type=${item.media_type}`}
-                  legacyBehavior>
-                  <a className={styles.similarCard}>
+                  className={styles.similarCard}>
                     <Image
                         src={item.poster_path ? `${TMDB_IMAGE_BASE_URL_W500}${item.poster_path}` : '/placeholder-poster.png'}
                         alt={item.title}
@@ -326,7 +320,6 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
                         unoptimized={!item.poster_path}
                     />
                     <p className={styles.similarTitle}>{item.title}</p>
-                  </a>
                 </Link>
               ))}
             </div>
@@ -376,7 +369,7 @@ export const getStaticProps: GetStaticProps<TitleDetailPageProps> = async (conte
     let initialSeasonNumber: number | null = null;
 
     if (details.media_type === 'tv' && details.seasons && details.seasons.length > 0) {
-      const firstSeason = details.seasons.find((s: any) => s.season_number === 1) || details.seasons[0];
+      const firstSeason = details.seasons.find((s: Season) => s.season_number === 1) || details.seasons[0];
       if (firstSeason) {
         initialSeasonNumber = firstSeason.season_number;
         const { data: episodes, error: episodesError } = await supabase
@@ -401,7 +394,7 @@ export const getStaticProps: GetStaticProps<TitleDetailPageProps> = async (conte
       },
       revalidate: 60, // Revalidate every 60 seconds
     };
-  } catch (err: any) {
+  } catch (err) {
     console.error(`Error in getStaticProps for ID ${id}:`, err);
     return {
       props: {

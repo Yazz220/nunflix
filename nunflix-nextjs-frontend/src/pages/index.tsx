@@ -1,6 +1,5 @@
 import type { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
-import { supabase } from '@/lib/supabaseClient';
 import Carousel from '@/components/Carousel/Carousel';
 import { ContentCardProps } from '@/components/ContentCard/ContentCard';
 import HeroBanner from '@/components/HeroBanner/HeroBanner';
@@ -68,7 +67,7 @@ const HomePage: NextPage<HomePageProps> = ({ frontPageData, error }) => {
               <Carousel
                 key={section.key}
                 title={section.title}
-                logoUrl={(section as any).logoUrl}
+                logoUrl={section.logoUrl}
                 items={frontPageData[section.key]}
                 isLargeRow={section.isLargeRow}
               />
@@ -87,25 +86,12 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
   const SECTIONS_CONFIG = [
     { key: 'trending', title: 'Trending Now', endpoint: '/trending/all/week' },
     { key: 'must_watch', title: 'Must Watch', params: { sort_by: 'popularity.desc' } },
-    { key: 'apple_tv', title: 'Apple TV+', params: { with_watch_providers: '2', watch_region: 'US' } },
-    { key: 'starz', title: 'Starz', params: { with_watch_providers: '431', watch_region: 'US' } },
-    { key: 'dc', title: 'DC', params: { with_companies: '9993' } },
-    { key: 'prime_video', title: 'Prime Video', params: { with_watch_providers: '9', watch_region: 'US' } },
-    { key: 'hbo', title: 'HBO', params: { with_watch_providers: '1899', watch_region: 'US' } },
-    { key: 'cartoon_network', title: 'Cartoon Network', params: { with_companies: '56' } },
-    { key: 'showtime', title: 'Showtime', params: { with_watch_providers: '67', watch_region: 'US' } },
-    { key: 'hulu', title: 'Hulu', params: { with_watch_providers: '15', watch_region: 'US' } },
-    { key: 'disney', title: 'Walt Disney Pictures', params: { with_companies: '2' } },
-    { key: 'nickelodeon', title: 'Nickelodeon', params: { with_companies: '13' } },
-    { key: 'peacock', title: 'Peacock', params: { with_watch_providers: '386', watch_region: 'US' } },
-    { key: 'crunchyroll', title: 'Crunchyroll', params: { with_watch_providers: '283', watch_region: 'US' } },
-    { key: 'anime', title: 'Anime', params: { with_genres: '16' } },
   ];
 
-  const fetchFromTMDB = async (endpoint: string, params: any = {}) => {
+  const fetchFromTMDB = async (endpoint: string, params: Record<string, string | undefined> = {}) => {
     const queryString = new URLSearchParams({
       api_key: TMDB_API_KEY!,
-      ...params,
+      ...(params as Record<string, string>),
     }).toString();
     const res = await fetch(`${TMDB_BASE_URL}${endpoint}?${queryString}`);
     if (!res.ok) {
@@ -133,7 +119,7 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
       },
       revalidate: 3600, // Re-generate the page every hour
     };
-  } catch (error: any) {
+  } catch (error) {
     console.error('Failed to fetch frontpage data in getStaticProps:', error);
     return {
       props: {
