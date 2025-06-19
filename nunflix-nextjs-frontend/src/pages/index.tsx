@@ -86,6 +86,19 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
   const SECTIONS_CONFIG = [
     { key: 'trending', title: 'Trending Now', endpoint: '/trending/all/week' },
     { key: 'must_watch', title: 'Must Watch', params: { sort_by: 'popularity.desc' } },
+    { key: 'apple_tv', title: 'Apple TV+', logoUrl: 'https://image.tmdb.org/t/p/original/9zZzJeMC2iYnFVc2aDP1XGgIqza.png', params: { with_companies: '2551' } },
+    { key: 'starz', title: 'Starz', logoUrl: 'https://image.tmdb.org/t/p/original/wZkKY6aL1kK28wA5S7N0wP3f8aA.png', params: { with_companies: '318' } },
+    { key: 'dc', title: 'DC', logoUrl: 'https://image.tmdb.org/t/p/original/4P82uYnB9e7aP3D2a2H2tIuM3d.png', params: { with_companies: '9993' } },
+    { key: 'prime_video', title: 'Prime Video', logoUrl: 'https://image.tmdb.org/t/p/original/6oE0ab60s3sA529iZzB02g3b6g.png', params: { with_watch_providers: '9', watch_region: 'US' } },
+    { key: 'hbo', title: 'HBO', logoUrl: 'https://image.tmdb.org/t/p/original/aS2zvP4sfv1x3bFFoRiw8Pa7V6a.png', params: { with_networks: '49' } },
+    { key: 'cartoon_network', title: 'Cartoon Network', logoUrl: 'https://image.tmdb.org/t/p/original/fSpP1N22h4D7qr82x1jJ3e1aY5A.png', params: { with_networks: '56' } },
+    { key: 'showtime', title: 'Showtime', logoUrl: 'https://image.tmdb.org/t/p/original/28gJbiGj33c5H13gD5i8aA6jXl.png', params: { with_networks: '67' } },
+    { key: 'hulu', title: 'Hulu', logoUrl: 'https://image.tmdb.org/t/p/original/z5VFC2gccx6f4FfD7fe7dphv7g.png', params: { with_watch_providers: '15', watch_region: 'US' } },
+    { key: 'disney', title: 'Walt Disney Pictures', logoUrl: 'https://image.tmdb.org/t/p/original/wdrCwmkt1s2zB4iFBMbAMi4rIq.png', params: { with_companies: '2' } },
+    { key: 'nickelodeon', title: 'Nickelodeon', logoUrl: 'https://image.tmdb.org/t/p/original/5VnSgU0EM63a0i4wsj2v0R2K3a.png', params: { with_companies: '13' } },
+    { key: 'peacock', title: 'Peacock', logoUrl: 'https://image.tmdb.org/t/p/original/x17l3V6DkUYJcUGW8uL6o23S86.png', params: { with_watch_providers: '386', watch_region: 'US' } },
+    { key: 'crunchyroll', title: 'Crunchyroll', logoUrl: 'https://image.tmdb.org/t/p/original/vj4I0Lcf3DT6yH8G3pSjW3mCgD.png', params: { with_watch_providers: '283', watch_region: 'US' } },
+    { key: 'anime', title: 'Anime', params: { with_genres: '16' } },
   ];
 
   const fetchFromTMDB = async (endpoint: string, params: Record<string, string | undefined> = {}) => {
