@@ -54,15 +54,16 @@ export default async function handler(
         .replace('{id}', id);
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1000); // 1-second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3-second timeout
 
       return fetch(embedUrl, { method: 'HEAD', signal: controller.signal })
         .then(response => {
           clearTimeout(timeoutId);
           if (response.ok) {
             return {
-              name: new URL(provider.base_url).hostname,
-              url: embedUrl,
+              label: new URL(provider.base_url).hostname.replace('www.', ''),
+              embed_url: embedUrl,
+              provider_name: new URL(provider.base_url).hostname.replace('www.', ''),
             };
           }
           return null;

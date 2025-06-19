@@ -309,10 +309,10 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
       <div className={styles.watchContainer}>
         <div className={styles.playerColumn}>
           <div className={styles.playerWrapper}>
-            {hasWindow && selectedSource ? (
+            {hasWindow && selectedSource && selectedSource.embed_url ? (
               <ReactPlayer
                 ref={playerRef}
-                url={getPlayerUrl()}
+                url={selectedSource.embed_url}
                 controls
                 playing
                 width="100%"

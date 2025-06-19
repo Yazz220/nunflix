@@ -80,38 +80,13 @@ const HomePage: NextPage<HomePageProps> = ({ frontPageData, error }) => {
 };
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
-  const TMDB_API_KEY = process.env.TMDB_API_KEY;
-  const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
-
-  const SECTIONS_CONFIG = [
-    { key: 'trending', title: 'Trending Now', endpoint: '/trending/all/week' },
-    { key: 'must_watch', title: 'Must Watch', params: { sort_by: 'popularity.desc' } },
-  ];
-
-  const fetchFromTMDB = async (endpoint: string, params: Record<string, string | undefined> = {}) => {
-    const queryString = new URLSearchParams({
-      api_key: TMDB_API_KEY!,
-      ...(params as Record<string, string>),
-    }).toString();
-    const res = await fetch(`${TMDB_BASE_URL}${endpoint}?${queryString}`);
-    if (!res.ok) {
-      throw new Error(`Failed to fetch from TMDB: ${endpoint}`);
-    }
-    const data = await res.json();
-    return data.results;
-  };
-
   try {
-    const frontPageData: FrontPageData = {};
-    for (const section of SECTIONS_CONFIG) {
-      let data;
-      if (section.endpoint) {
-        data = await fetchFromTMDB(section.endpoint);
-      } else {
-        data = await fetchFromTMDB('/discover/movie', section.params);
-      }
-      frontPageData[section.key] = data;
+    // Fetch data from the frontpage API route
+    const res = await fetch('http://localhost:3000/api/v1/frontpage');
+    if (!res.ok) {
+      throw new Error('Failed to fetch frontpage data');
     }
+    const frontPageData = await res.json();
 
     return {
       props: {

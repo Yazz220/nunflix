@@ -12,17 +12,18 @@ export const config = {
 };
 
 export default async function middleware(request: NextRequest) {
-  const ip = request.headers.get('x-forwarded-for') ?? '127.0.0.1';
-  const { success, limit, reset, remaining } = await ratelimit.limit(ip);
+  // const ip = request.headers.get('x-forwarded-for') ?? '127.0.0.1';
+  // const { success, limit, reset, remaining } = await ratelimit.limit(ip);
 
-  return success
-    ? NextResponse.next()
-    : new Response('Too many requests', {
-        status: 429,
-        headers: {
-          'X-RateLimit-Limit': limit.toString(),
-          'X-RateLimit-Remaining': remaining.toString(),
-          'X-RateLimit-Reset': reset.toString(),
-        },
-      });
+  // return success
+  //   ? NextResponse.next()
+  //   : new Response('Too many requests', {
+  //       status: 429,
+  //       headers: {
+  //         'X-RateLimit-Limit': limit.toString(),
+  //         'X-RateLimit-Remaining': remaining.toString(),
+  //         'X-RateLimit-Reset': reset.toString(),
+  //       },
+  //     });
+  return NextResponse.next();
 }

@@ -1,4 +1,4 @@
-import type { GetStaticProps, GetStaticPaths, NextPage } from 'next';
+import type { GetServerSideProps, GetStaticPaths, NextPage } from 'next';
 import Head from 'next/head';
 import { useState, useEffect } from 'react'; // Import useState and useEffect
 import { supabase } from '@/lib/supabaseClient';
@@ -329,28 +329,8 @@ const TitleDetailPage: NextPage<TitleDetailPageProps> = ({ details, error, initi
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  // Fetch all movie and TV show IDs from your Supabase database
-  const { data, error } = await supabase
-    .from('titles')
-    .select('id, media_type');
 
-  if (error) {
-    console.error('Error fetching paths:', error);
-    return { paths: [], fallback: 'blocking' };
-  }
-
-  const paths = data.map((title) => ({
-    params: { id: String(title.id) }, // Only include id in params
-  }));
-
-  return {
-    paths,
-    fallback: 'blocking', // or true
-  };
-};
-
-export const getStaticProps: GetStaticProps<TitleDetailPageProps> = async (context) => {
+export const getServerSideProps: GetServerSideProps<TitleDetailPageProps> = async (context) => {
   const { id } = context.params as { id: string };
 
   if (!id) {
@@ -391,16 +371,14 @@ export const getStaticProps: GetStaticProps<TitleDetailPageProps> = async (conte
         initialEpisodes,
         initialSeasonNumber,
       },
-      revalidate: 60, // Revalidate every 60 seconds
     };
   } catch (err) {
-    console.error(`Error in getStaticProps for ID ${id}:`, err);
+    console.error(`Error in getServerSideProps for ID ${id}:`, err);
     return {
       props: {
         details: null,
         error: 'Failed to load title details.',
       },
-      revalidate: 60,
     };
   }
 };

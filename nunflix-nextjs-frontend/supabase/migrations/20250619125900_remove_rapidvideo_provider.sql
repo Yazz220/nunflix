@@ -1,0 +1,1 @@
+DELETE FROM embed_providers WHERE base_url = 'https://www.rapidvideo.com/e/';
