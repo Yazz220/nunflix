@@ -1,7 +1,13 @@
 import React, { forwardRef } from 'react';
-import Player from 'react-player/lazy';
+import dynamic from 'next/dynamic';
+import type { ReactPlayerProps } from 'react-player';
 
-const VideoPlayer = (props: any, ref: any) => {
+const Player = dynamic(() => import('react-player/lazy'), { ssr: false });
+
+const VideoPlayer = (
+  props: ReactPlayerProps,
+  ref: React.ForwardedRef<any>
+) => {
   return <Player {...props} ref={ref} />;
 };
 

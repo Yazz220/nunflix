@@ -1,3 +1,7 @@
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -47,6 +51,14 @@ const nextConfig = {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
           },
+          {
+            key: 'Content-Security-Policy-Report-Only',
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' https://image.tmdb.org https://www.themoviedb.org https://placehold.co https://kveihttvszgvmzzvnmqo.supabase.co; frame-src https://vidsrc.to https://multiembed.mov https://streamtape.com https://uptostream.com https://filemoon.sx https://vidcloud9.com https://www.mp4upload.com https://sbplay2.com https://www.rapidvideo.com; connect-src 'self' https://kveihttvszgvmzzvnmqo.supabase.co; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
         ],
       },
     ];
@@ -60,7 +72,7 @@ module.exports = nextConfig;
 const { withSentryConfig } = require("@sentry/nextjs");
 
 module.exports = withSentryConfig(
-  module.exports,
+  withBundleAnalyzer(module.exports),
   {
     // For all available options, see:
     // https://www.npmjs.com/package/@sentry/webpack-plugin#options

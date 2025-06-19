@@ -29,6 +29,10 @@ jobs:
         working-directory: ./nunflix-nextjs-frontend
         run: bun lint
 
+      - name: Type Check
+        working-directory: ./nunflix-nextjs-frontend
+        run: bun tsc --noEmit
+
       - name: Build
         working-directory: ./nunflix-nextjs-frontend
         run: bun run build

@@ -23,8 +23,11 @@ export default async function handler(
 ) {
   const { id, type } = req.query;
 
-  if (!id || !type || typeof id !== 'string' || (type !== 'movie' && type !== 'tv')) {
-    return res.status(400).json({ error: 'Missing or invalid id or type' });
+  const isValidId = (val: any): val is string => typeof val === 'string' && /^[a-zA-Z0-9_-]+$/.test(val);
+  const isValidType = (val: any): val is 'movie' | 'tv' => val === 'movie' || val === 'tv';
+
+  if (!isValidId(id) || !isValidType(type)) {
+    return res.status(400).json({ error: 'Invalid id or type provided' });
   }
 
   try {
@@ -44,35 +47,35 @@ export default async function handler(
     }
 
     const shuffledProviders = shuffleArray(providers);
-    const streamSources = [];
 
-    for (const provider of shuffledProviders) {
+    const promises = shuffledProviders.map(provider => {
       const embedUrl = provider.pattern
         .replace('{type}', type)
         .replace('{id}', id);
 
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000); // 3-second timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1000); // 1-second timeout
 
-        const response = await fetch(embedUrl, { method: 'HEAD', signal: controller.signal });
-        clearTimeout(timeoutId);
-
-        if (response.ok) {
-          streamSources.push({
-            name: new URL(provider.base_url).hostname, // Use hostname as name
-            url: embedUrl,
-          });
-          // Return the first N working mirrors
-          if (streamSources.length >= 2) {
-            break;
+      return fetch(embedUrl, { method: 'HEAD', signal: controller.signal })
+        .then(response => {
+          clearTimeout(timeoutId);
+          if (response.ok) {
+            return {
+              name: new URL(provider.base_url).hostname,
+              url: embedUrl,
+            };
           }
-        }
-      } catch (error) {
-        // Ignore fetch errors (like timeouts) and continue
-        console.warn(`Provider ${provider.base_url} failed:`, error);
-      }
-    }
+          return null;
+        })
+        .catch(error => {
+          clearTimeout(timeoutId);
+          console.warn(`Provider ${provider.base_url} failed:`, error);
+          return null;
+        });
+    });
+
+    const results = await Promise.all(promises);
+    const streamSources = results.filter(Boolean).slice(0, 3);
 
     if (streamSources.length === 0) {
       return res.status(404).json({ error: 'No working stream sources found' });

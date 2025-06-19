@@ -1,6 +1,7 @@
 {
   "dependencies": {},
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.3.4",
     "supabase": "^2.24.3"
   }
 }

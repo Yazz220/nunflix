@@ -39,6 +39,14 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>Nunflix</title>
         <meta name="description" content="Nunflix - Watch Movies & TV Shows Online" />
         <link rel="icon" href="/favicon.ico" />
+        <meta property="og:title" content="Nunflix" />
+        <meta property="og:description" content="Nunflix - Watch Movies & TV Shows Online" />
+        <meta property="og:image" content="/nunflix-logo.png" />
+        <meta property="og:url" content="https://nunflix.app" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Nunflix" />
+        <meta name="twitter:description" content="Nunflix - Watch Movies & TV Shows Online" />
+        <meta name="twitter:image" content="/nunflix-logo.png" />
       </Head>
       <Script
         strategy="lazyOnload"

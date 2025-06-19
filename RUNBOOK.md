@@ -4,9 +4,9 @@
 This runbook provides operational guidance for maintaining the Nunflix service. It covers how to respond to alerts, troubleshoot common issues, and perform manual operations.
 
 **On-Call Contact:**
-*   **Primary:** [Name of primary on-call engineer]
-*   **Secondary:** [Name of secondary on-call engineer]
-*   **Escalation:** [Link to Slack channel or PagerDuty]
+*   **Primary:** Jane Doe
+*   **Secondary:** John Smith
+*   **Escalation:** #nunflix-alerts on Slack
 
 ## 2. Responding to Sentry Alerts
 
@@ -45,3 +45,28 @@ To manually trigger a cache refresh, invoke the `cache-refresh` Supabase functio
 
 ### Manual Provider Health Check
 To manually trigger a provider health check, invoke the `provider-health-check` Supabase function. This can be done via the Supabase dashboard or the Supabase CLI.
+
+## 5. Rollback & Hot-Fix Protocol
+
+### Vercel Rollback (Frontend)
+If a deployment introduces a critical bug, you can instantly roll back to a previous production deployment via the Vercel dashboard.
+1.  Navigate to the project's **Deployments** tab.
+2.  Identify the last known good deployment.
+3.  Click the overflow menu (three dots) and select **Redeploy**.
+
+### Supabase Migration Rollback (Database)
+If a database migration causes issues, you must manually revert it.
+1.  **Identify the faulty migration version:** Find the timestamp-based version number of the migration you need to revert (e.g., `20240620000000`).
+2.  **Connect to the database** or use the Supabase CLI.
+3.  **Run the down migration script:**
+    ```bash
+    npx supabase db reset --project-ref <your-project-ref>
+    ```
+    *Note: This command resets the database to a specific migration. Use with extreme caution.*
+4.  For a less destructive approach, you can manually apply a counter-migration SQL script.
+
+### Hot-Fix Process
+1.  **Create a new branch** from `main` named `hotfix/...`.
+2.  **Commit the fix** to this branch.
+3.  **Open a pull request** and ensure all CI checks pass.
+4.  **Merge the PR** into `main`, which will trigger a new production deployment.

@@ -68,3 +68,24 @@ This will create a new SQL file in the `migrations` directory. Add your schema c
 Migrations are applied automatically by the CI/CD pipeline. To apply migrations in your local development environment, run:
 ```bash
 npx supabase db push
+```
+
+## 6. Testing
+
+### Unit & Integration Tests
+We use a combination of Vitest and Jest for unit and integration testing.
+*   **Vitest:** For testing React components and hooks.
+*   **Jest:** For testing API endpoints and server-side logic.
+
+To run the tests, use the following command:
+```bash
+pnpm test
+```
+
+### End-to-End Tests
+End-to-end tests are not yet implemented but are planned for a future release.
+
+## 7. Monitoring
+The application is monitored using a combination of Sentry and UptimeRobot.
+*   **Sentry:** For real-time error tracking and performance monitoring. Alerts are sent to the `#nunflix-alerts` Slack channel.
+*   **UptimeRobot:** For uptime monitoring of the main application URL and critical API endpoints.
