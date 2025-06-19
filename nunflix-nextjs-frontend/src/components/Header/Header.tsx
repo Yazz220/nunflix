@@ -46,10 +46,21 @@ const Header: React.FC = () => { // Re-adding the component definition
     { name: 'Popular Movies', href: '/movies/popular' },
     { name: 'Top Rated', href: '/movies/top_rated' },
     { name: 'Marvel Movies', href: '/movies/marvel' },
+    { name: 'DC Movies', href: '/movies/dc' },
+    { name: 'Paramount Movies', href: '/movies/paramount' },
+    { name: 'Disney Movies', href: '/movies/disney' },
+    { name: 'Most Viewed', href: '/movies/most_viewed' },
   ];
   const showsDropdownItems: DropdownLink[] = [
     { name: 'Popular Shows', href: '/shows/popular' },
     { name: 'Top Rated', href: '/shows/top_rated' },
+    { name: 'Netflix', href: '/shows/netflix' },
+    { name: 'HBO', href: '/shows/hbo' },
+    { name: 'Apple TV+', href: '/shows/apple_tv+' },
+    { name: 'Prime Video', href: '/shows/prime_video' },
+    { name: 'Shahid VIP', href: '/shows/shahid_vip' },
+    { name: 'Starz Play', href: '/shows/starz_play' },
+    { name: 'Hulu', href: '/shows/hulu' },
   ];
   const streamingDropdownItems: DropdownLink[] = [
     { name: 'Netflix', href: '/streaming/netflix' },
@@ -58,9 +69,19 @@ const Header: React.FC = () => { // Re-adding the component definition
     { name: 'Apple TV+', href: '/streaming/apple_tv+' },
     { name: 'Prime Video', href: '/streaming/prime_video' },
     { name: 'Hulu', href: '/streaming/hulu' },
+    { name: 'Shahid VIP', href: '/streaming/shahid_vip' },
+    { name: 'Starz Play', href: '/streaming/starz_play' },
   ];
   const discoverDropdownItems: DropdownLink[] = [
     { name: 'Trending Today', href: '/discover' },
+    { name: 'Anime', href: '/discover?genre=anime' },
+    { name: 'Top Rated', href: '/discover?sort=vote_average.desc' },
+    { name: 'Most Popular', href: '/discover?sort=popularity.desc' },
+    { name: 'Marvel Universe', href: '/discover?collection=marvel' },
+    { name: 'DC Universe', href: '/discover?collection=dc' },
+    { name: 'Most Viewed', href: '/discover?sort=views.desc' },
+    // Your Watchlist requires auth; link stays visible, but you could wrap with auth check if preferred
+    { name: 'Your Watchlist', href: '/profile?tab=watchlist' },
   ];
 
   const transitionNavBar = () => {
@@ -160,7 +181,7 @@ const Header: React.FC = () => { // Re-adding the component definition
               onMouseEnter={() => handleMouseEnter('streaming')}
               onMouseLeave={handleMouseLeave}
             >
-              <Link href="/#" className={styles.navLinkItem}>Streaming</Link> {/* Placeholder main link */}
+              <Link href="/streaming/netflix" className={styles.navLinkItem}>Streaming</Link>
               {activeDropdown === 'streaming' && (
                 <DropdownPanel title="Streaming" startOpen>
                   {streamingDropdownItems.map((item) => (
@@ -176,7 +197,7 @@ const Header: React.FC = () => { // Re-adding the component definition
               onMouseEnter={() => handleMouseEnter('discover')}
               onMouseLeave={handleMouseLeave}
             >
-              <Link href="/#" className={styles.navLinkItem}>Discover</Link> {/* Placeholder main link */}
+              <Link href="/discover" className={styles.navLinkItem}>Discover</Link>
               {activeDropdown === 'discover' && (
                 <DropdownPanel title="Discover" startOpen>
                   {discoverDropdownItems.map((item) => (

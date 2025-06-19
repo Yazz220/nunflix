@@ -13,11 +13,22 @@ const BurgerMenuPanel: React.FC<BurgerMenuPanelProps> = ({ onClose }) => {
     { name: 'Popular Movies', href: '/movies/popular' },
     { name: 'Top Rated', href: '/movies/top_rated' },
     { name: 'Marvel Movies', href: '/movies/marvel' },
+    { name: 'DC Movies', href: '/movies/dc' },
+    { name: 'Paramount Movies', href: '/movies/paramount' },
+    { name: 'Disney Movies', href: '/movies/disney' },
+    { name: 'Most Viewed', href: '/movies/most_viewed' },
   ];
 
   const showFilters = [
     { name: 'Popular Shows', href: '/shows/popular' },
     { name: 'Top Rated', href: '/shows/top_rated' },
+    { name: 'Netflix', href: '/shows/netflix' },
+    { name: 'HBO', href: '/shows/hbo' },
+    { name: 'Apple TV+', href: '/shows/apple_tv+' },
+    { name: 'Prime Video', href: '/shows/prime_video' },
+    { name: 'Shahid VIP', href: '/shows/shahid_vip' },
+    { name: 'Starz Play', href: '/shows/starz_play' },
+    { name: 'Hulu', href: '/shows/hulu' },
   ];
 
   const streamingFilters = [
@@ -26,11 +37,20 @@ const BurgerMenuPanel: React.FC<BurgerMenuPanelProps> = ({ onClose }) => {
     { name: 'HBO Max', href: '/streaming/hbo_max' },
     { name: 'Apple TV+', href: '/streaming/apple_tv+' },
     { name: 'Prime Video', href: '/streaming/prime_video' },
+    { name: 'Shahid VIP', href: '/streaming/shahid_vip' },
+    { name: 'Starz Play', href: '/streaming/starz_play' },
     { name: 'Hulu', href: '/streaming/hulu' },
   ];
 
   const discoverFilters = [
     { name: 'Trending Today', href: '/discover' },
+    { name: 'Anime', href: '/discover?genre=anime' },
+    { name: 'Top Rated', href: '/discover?sort=vote_average.desc' },
+    { name: 'Most Popular', href: '/discover?sort=popularity.desc' },
+    { name: 'Marvel Universe', href: '/discover?collection=marvel' },
+    { name: 'DC Universe', href: '/discover?collection=dc' },
+    { name: 'Most Viewed', href: '/discover?sort=views.desc' },
+    { name: 'Your Watchlist', href: '/profile?tab=watchlist' },
   ];
 
   return (
