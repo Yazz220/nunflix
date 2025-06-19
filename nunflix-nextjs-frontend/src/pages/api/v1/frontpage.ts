@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '@/lib/supabaseClient';
-
+import { Title } from '@/types';
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -40,7 +40,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const frontpageData: Record<string, any[]> = {};
+    const frontpageData: Record<string, Title[]> = {};
 
     for (const section of SECTIONS) {
       const cacheKey = `frontpage:${section.key}`;

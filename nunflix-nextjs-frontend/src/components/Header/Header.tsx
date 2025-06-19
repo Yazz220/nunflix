@@ -39,13 +39,6 @@ const Header: React.FC = () => { // Re-adding the component definition
     }, 200); // Small delay to allow moving cursor to dropdown
   };
 
-  const handleDropdownMouseEnter = () => {
-    if (dropdownTimeoutRef.current) {
-      clearTimeout(dropdownTimeoutRef.current);
-      dropdownTimeoutRef.current = null;
-    }
-  };
-
 
   // Sample data for dropdowns - can be moved to a separate file/constants
   const moviesDropdownItems: DropdownLink[] = [

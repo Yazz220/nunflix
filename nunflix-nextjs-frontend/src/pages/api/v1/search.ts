@@ -30,7 +30,7 @@ export default async function handler(
       total_pages: count ? Math.ceil(count / limit) : 1,
       total_results: count,
     });
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: `Failed to fetch search results for query: ${q}` });
   }
 }

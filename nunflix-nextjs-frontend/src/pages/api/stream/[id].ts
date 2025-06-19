@@ -23,8 +23,8 @@ export default async function handler(
 ) {
   const { id, type } = req.query;
 
-  const isValidId = (val: any): val is string => typeof val === 'string' && /^[a-zA-Z0-9_-]+$/.test(val);
-  const isValidType = (val: any): val is 'movie' | 'tv' => val === 'movie' || val === 'tv';
+  const isValidId = (val: unknown): val is string => typeof val === 'string' && /^[a-zA-Z0-9_-]+$/.test(val);
+  const isValidType = (val: unknown): val is 'movie' | 'tv' => val === 'movie' || val === 'tv';
 
   if (!isValidId(id) || !isValidType(type)) {
     return res.status(400).json({ error: 'Invalid id or type provided' });

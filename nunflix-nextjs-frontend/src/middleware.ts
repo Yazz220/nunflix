@@ -13,7 +13,7 @@ export const config = {
 
 export default async function middleware(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for') ?? '127.0.0.1';
-  const { success, pending, limit, reset, remaining } = await ratelimit.limit(ip);
+  const { success, limit, reset, remaining } = await ratelimit.limit(ip);
 
   return success
     ? NextResponse.next()

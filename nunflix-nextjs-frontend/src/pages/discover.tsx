@@ -21,7 +21,7 @@ interface Genre {
     name: string;
 }
 
-const fetchDiscover = async ({ pageParam = 1, queryKey }: any): Promise<DiscoverResult> => {
+const fetchDiscover = async ({ pageParam = 1, queryKey }: { pageParam?: number; queryKey: readonly [string, { media_type: string; genre: string; sort: string; year: string }] }): Promise<DiscoverResult> => {
   const [, { media_type, genre, sort, year }] = queryKey;
   const res = await fetch(`/api/v1/discover?media_type=${media_type}&page=${pageParam}&genre_id=${genre}&sort_by=${sort}&year=${year}`);
   if (!res.ok) {
@@ -30,7 +30,7 @@ const fetchDiscover = async ({ pageParam = 1, queryKey }: any): Promise<Discover
   return res.json();
 };
 
-const fetchGenres = async ({ queryKey }: any): Promise<{ genres: Genre[] }> => {
+const fetchGenres = async ({ queryKey }: { queryKey: readonly [string, { media_type: string }] }): Promise<{ genres: Genre[] }> => {
   const [, { media_type }] = queryKey;
   const res = await fetch(`/api/v1/genres?media_type=${media_type}`);
   if (!res.ok) {
@@ -53,8 +53,9 @@ const DiscoverPage: NextPage = () => {
     data: genresData,
     isLoading: genresLoading,
   } = useQuery({
-    queryKey: ['genres', { media_type: mediaType }],
+    queryKey: ['genres', { media_type: mediaType as string }] as const,
     queryFn: fetchGenres,
+    initialData: { genres: [] },
   });
 
   const {
@@ -64,7 +65,7 @@ const DiscoverPage: NextPage = () => {
     isFetching,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['discover', { media_type: mediaType, genre: selectedGenre, sort: sortBy, year: selectedYear }],
+    queryKey: ['discover', { media_type: mediaType as string, genre: selectedGenre as string, sort: sortBy as string, year: selectedYear as string }] as const,
     queryFn: fetchDiscover,
     initialPageParam: 1,
     getNextPageParam: (lastPage: DiscoverResult) => {

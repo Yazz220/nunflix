@@ -104,9 +104,9 @@ const MoviesPage: NextPage<MoviesPageProps> = ({ moviesData, error, genres, init
               onChange={handleGenreChange}
             >
               <option value="">All Genres</option>
-              {genres.map((genre: any) => (
-                <option key={genre.id} value={genre.name}>
-                  {genre.name}
+              {genres.map((genre: string) => (
+                <option key={genre} value={genre}>
+                  {genre}
                 </option>
               ))}
             </select>

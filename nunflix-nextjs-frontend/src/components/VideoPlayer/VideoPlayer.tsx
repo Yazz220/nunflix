@@ -1,14 +1,14 @@
 import React, { forwardRef } from 'react';
-import dynamic from 'next/dynamic';
-import type { ReactPlayerProps } from 'react-player';
+import ReactPlayer, { ReactPlayerProps } from 'react-player/lazy';
 
-const Player = dynamic(() => import('react-player/lazy'), { ssr: false });
+interface VideoPlayerProps extends ReactPlayerProps {
+  // Add any additional props you want to expose
+}
 
-const VideoPlayer = (
-  props: ReactPlayerProps,
-  ref: React.ForwardedRef<any>
-) => {
-  return <Player {...props} ref={ref} />;
-};
+const VideoPlayer = forwardRef<ReactPlayer, VideoPlayerProps>((props, ref) => {
+  return <ReactPlayer {...props} ref={ref} />;
+});
 
-export default forwardRef(VideoPlayer);
+VideoPlayer.displayName = 'VideoPlayer';
+
+export default VideoPlayer;

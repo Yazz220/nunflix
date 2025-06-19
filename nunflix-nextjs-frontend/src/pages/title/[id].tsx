@@ -1,6 +1,5 @@
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react'; // Import useState and useEffect
 import { supabase } from '@/lib/supabaseClient';
 import Image from 'next/image';

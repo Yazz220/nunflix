@@ -12,9 +12,8 @@ import { parseTitleDetails } from '@/lib/utils';
 import ServerSelector from '@/components/ServerSelector/ServerSelector';
 import EpisodeList from '@/components/EpisodeList/EpisodeList';
 import { FaChevronLeft, FaChevronRight, FaArrowLeft, FaInfoCircle, FaUsers, FaExpand, FaList } from 'react-icons/fa';
-import React, { forwardRef } from 'react';
-
-const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
+import React from 'react';
+import ReactPlayer from 'react-player/lazy';
 
 interface StreamSource {
   label: string;
@@ -204,30 +203,27 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
         );
       } catch (err) {
         console.error('Failed to update progress:', err);
-        const message = (err as any).response?.data?.error || (err as Error).message || 'Failed to update viewing progress.';
+        const message = ((err as any).response?.data?.error || (err as Error).message) as string;
         setGlobalError(message);
       }
     }, 2000); // Debounce for 2 seconds
   };
 
-  const handlePlayerReady = () => {
-    setIsPlayerReady(true);
-  };
-  
   const handleSourceChange = (source: StreamSource) => {
     setSelectedSource(source);
-    setIsPlayerReady(false); // Reset to allow autoplay or re-init
+  };
+
+  const handlePlayerReady = () => {
+    setIsPlayerReady(true);
   };
 
   const handleSeasonChange = (seasonNumber: number) => {
     setSelectedSeasonNumber(seasonNumber);
     setSelectedEpisodeNumber(1); // Reset to first episode of new season
-    setIsPlayerReady(false);
   };
 
   const handleEpisodeChange = (episodeNumber: number) => {
     setSelectedEpisodeNumber(episodeNumber);
-    setIsPlayerReady(false);
   };
 
   const hasNextEpisode = type === 'tv' && currentSeasonDetails && selectedEpisodeNumber < currentSeasonDetails.episodes.length;
@@ -236,14 +232,12 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
   const goToNextEpisode = () => {
     if (hasNextEpisode) {
       setSelectedEpisodeNumber(prev => prev + 1);
-      setIsPlayerReady(false);
     } else if (type === 'tv' && titleDetails?.seasons) {
       const currentSeasonIndex = titleDetails.seasons.findIndex(s => s.season_number === selectedSeasonNumber);
       if (currentSeasonIndex !== -1 && currentSeasonIndex < titleDetails.seasons.length - 1) {
         const nextSeason = titleDetails.seasons[currentSeasonIndex + 1];
         setSelectedSeasonNumber(nextSeason.season_number);
         setSelectedEpisodeNumber(1);
-        setIsPlayerReady(false);
       }
     }
   };
@@ -251,7 +245,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
   const goToPreviousEpisode = () => {
     if (hasPreviousEpisode) {
       setSelectedEpisodeNumber(prev => prev - 1);
-      setIsPlayerReady(false);
     } else if (type === 'tv' && titleDetails?.seasons) {
       const currentSeasonIndex = titleDetails.seasons.findIndex(s => s.season_number === selectedSeasonNumber);
       if (currentSeasonIndex > 0) {
@@ -261,7 +254,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ titleDetails: initialTitleDetails
         // This requires fetching episodes of the previous season first
         // For simplicity, for now, we'll go to the first episode of the previous season
         setSelectedEpisodeNumber(1);
-        setIsPlayerReady(false);
       }
     }
   };
@@ -439,7 +431,6 @@ export const getServerSideProps: GetServerSideProps<WatchPageProps> = async (con
     let initialSeasonDetails: SeasonDetails | null = null;
     if (type === 'tv' && titleDetails && titleDetails.seasons && titleDetails.seasons.length > 0) {
       const seasonNumber = seasonQuery ? Number(seasonQuery) : (titleDetails.seasons.find(s => s.season_number === 1)?.season_number || titleDetails.seasons[0]?.season_number || 1);
-      const episodeNumber = episodeQuery ? Number(episodeQuery) : 1;
 
       console.log(`WatchPage getServerSideProps: Fetching episodes for TV show ${id}, season ${seasonNumber}`);
       const { data: episodesData, error: episodesError } = await supabase

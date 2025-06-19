@@ -4,6 +4,7 @@ import styles from '@/styles/ProfilePage.module.css';
 import Message from './Message';
 import ContentCard from '@/components/ContentCard/ContentCard';
 import { Title } from '../../types';
+import Image from 'next/image';
 
 const TABS = [
   { key: 'profile', label: 'Profile' },
@@ -78,7 +79,7 @@ const ProfilePage = () => {
     }
   };
 
-  const fetchListData = useCallback(async (endpoint: string, setter: React.Dispatch<React.SetStateAction<any>>) => {
+  const fetchData = useCallback(async <T,>(endpoint: string, setter: React.Dispatch<React.SetStateAction<T>>) => {
     try {
       const response = await fetch(`/api/v1/profile/${endpoint}`);
       if (!response.ok) {
@@ -93,15 +94,15 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (activeTab === 'history') {
-      fetchListData('history', setHistory);
+      fetchData('history', setHistory);
     } else if (activeTab === 'favorites') {
-      fetchListData('favorites', setFavorites);
+      fetchData('favorites', setFavorites);
     } else if (activeTab === 'watchlist') {
-      fetchListData('watchlist', setWatchlist);
+      fetchData('watchlist', setWatchlist);
     } else if (activeTab === 'settings') {
-      fetchListData('settings', setSettings);
+      fetchData('settings', setSettings);
     }
-  }, [activeTab, fetchListData]);
+  }, [activeTab, fetchData]);
 
   if (!user) {
     return <div>Loading...</div>;
@@ -126,12 +127,13 @@ const ProfilePage = () => {
           <form onSubmit={handleProfileUpdate} className={styles.profileForm}>
             {message && <Message type={message.type}>{message.text}</Message>}
             <div className={styles.avatarPreviewWrapper}>
-              <img
+              <Image
                 src={avatarUrl || '/placeholder-poster.png'}
                 alt="Avatar Preview"
                 className={styles.avatar}
                 width={120}
                 height={120}
+                unoptimized
               />
             </div>
             <div className={styles.formGroup}>
