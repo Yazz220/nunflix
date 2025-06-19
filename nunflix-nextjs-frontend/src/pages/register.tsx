@@ -34,7 +34,7 @@ const RegisterPage: NextPage = () => {
     setGlobalError(null); // Clear previous errors
     setIsLoading(true);
     try {
-      await registerAction(email, password);
+      await registerAction(email, password, username);
       router.push('/profile');
     } catch (err) {
       console.error('Registration failed', err);

@@ -160,7 +160,7 @@ const Header: React.FC = () => { // Re-adding the component definition
               onMouseEnter={() => handleMouseEnter('streaming')}
               onMouseLeave={handleMouseLeave}
             >
-              <Link href="/#" className={styles.navLinkItem}>Streaming</Link> {/* Placeholder main link */}
+              <Link href="/streaming" className={styles.navLinkItem}>Streaming</Link>
               {activeDropdown === 'streaming' && (
                 <DropdownPanel title="Streaming" startOpen>
                   {streamingDropdownItems.map((item) => (
@@ -176,7 +176,7 @@ const Header: React.FC = () => { // Re-adding the component definition
               onMouseEnter={() => handleMouseEnter('discover')}
               onMouseLeave={handleMouseLeave}
             >
-              <Link href="/#" className={styles.navLinkItem}>Discover</Link> {/* Placeholder main link */}
+              <Link href="/discover" className={styles.navLinkItem}>Discover</Link>
               {activeDropdown === 'discover' && (
                 <DropdownPanel title="Discover" startOpen>
                   {discoverDropdownItems.map((item) => (

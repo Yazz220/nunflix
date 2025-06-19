@@ -17,7 +17,7 @@ interface DiscoverResult {
 interface MoviesPageProps {
   moviesData: DiscoverResult | null;
   error?: string;
-  genres: string[]; // Add genres to props
+  genres: { id: number; name: string }[]; // Add genres to props
   initialGenre?: string; // Add initialGenre to props
   initialSort?: string; // Add initialSort to props
 }
@@ -104,9 +104,9 @@ const MoviesPage: NextPage<MoviesPageProps> = ({ moviesData, error, genres, init
               onChange={handleGenreChange}
             >
               <option value="">All Genres</option>
-              {genres.map((genre: string) => (
-                <option key={genre} value={genre}>
-                  {genre}
+              {genres.map((genre) => (
+                <option key={genre.id} value={genre.name}>
+                  {genre.name}
                 </option>
               ))}
             </select>
@@ -178,13 +178,12 @@ export const getServerSideProps: GetServerSideProps<MoviesPageProps> = async (co
   try {
     // Fetch distinct genres for the filter dropdown
     const { data: genresData, error: genresError } = await supabase
-      .from('titles')
-      .select('genres')
-      .eq('media_type', 'movie');
+      .from('genres')
+      .select('id, name');
     
     if (genresError) throw genresError;
 
-    const uniqueGenres = Array.from(new Set(genresData.flatMap((item: { genres: string[] }) => item.genres || []))).filter(Boolean) as string[];
+    const uniqueGenres = genresData || [];
 
     let movieQuery = supabase
       .from('titles')
@@ -192,7 +191,17 @@ export const getServerSideProps: GetServerSideProps<MoviesPageProps> = async (co
       .eq('media_type', 'movie');
 
     if (selectedGenre) {
-      movieQuery = movieQuery.contains('genres', [selectedGenre]);
+      const { data: genreData, error: genreError } = await supabase
+        .from('genres')
+        .select('id')
+        .eq('name', selectedGenre)
+        .single();
+
+      if (genreError) throw genreError;
+
+      if (genreData) {
+        movieQuery = movieQuery.contains('genres', [genreData.id]);
+      }
     }
 
     const [sortBy, sortDirection] = sortOrder.split('.');

@@ -48,7 +48,7 @@ interface AuthState {
   continueWatching: ContinueWatchingItem[];
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, username: string) => Promise<void>;
   fetchUser: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   setFavorites: (items: FavoriteItem[]) => void;
@@ -85,10 +85,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     await supabase.auth.signOut();
     set({ user: null, isAuthenticated: false, favorites: [], watchlist: [], continueWatching: [] });
   },
-  register: async (email, password) => {
+  register: async (email, password, username) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          username: username,
+        }
+      }
     });
     if (error) throw error;
     if (data.user) {

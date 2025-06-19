@@ -1,0 +1,4 @@
+CREATE TABLE genres (
+  id BIGINT PRIMARY KEY,
+  name TEXT NOT NULL
+);
