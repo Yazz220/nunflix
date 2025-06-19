@@ -22,7 +22,7 @@ declare module 'react-player' {
     playIcon?: React.ReactElement;
     previewTabIndex?: number;
     config?: {
-      [key: string]: any;
+      [key: string]: unknown;
     };
     onReady?: (player: ReactPlayer) => void;
     onStart?: () => void;
@@ -32,7 +32,7 @@ declare module 'react-player' {
     onBufferEnd?: () => void;
     onSeek?: (seconds: number) => void;
     onEnded?: () => void;
-    onError?: (error: any, data?: any, hlsInstance?: any, hlsGlobal?: any) => void;
+    onError?: (error: Error, data?: unknown, hlsInstance?: unknown, hlsGlobal?: unknown) => void;
     onProgress?: (state: { played: number; playedSeconds: number; loaded: number; loadedSeconds: number }) => void;
     onDuration?: (duration: number) => void;
   }
@@ -41,7 +41,7 @@ declare module 'react-player' {
     seekTo(amount: number, type?: 'seconds' | 'fraction'): void;
     getCurrentTime(): number;
     getDuration(): number;
-    getInternalPlayer(key?: string): any;
+    getInternalPlayer(key?: string): unknown;
     showPreview(): void;
   }
 }

@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import ReactPlayer, { ReactPlayerProps } from 'react-player/lazy';
 
 interface VideoPlayerProps extends ReactPlayerProps {
-  // Add any additional props you want to expose
+  // This interface is intentionally left empty to allow for future customization.
 }
 
 const VideoPlayer = forwardRef<ReactPlayer, VideoPlayerProps>((props, ref) => {
